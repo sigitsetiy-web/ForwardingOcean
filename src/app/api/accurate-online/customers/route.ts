@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAccurateService } from "@/lib/accurate-online";
 
+
+export const dynamic = 'force-dynamic';
+
 // GET /api/accurate-online/customers - Fetch customers from Accurate Online
 export async function GET(request: NextRequest) {
   try {

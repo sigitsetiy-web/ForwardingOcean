@@ -4,6 +4,9 @@ import { z } from "zod";
 import { notifyApprovers } from "@/lib/notifications";
 
 const createApprovalSchema = z.object({
+
+export const dynamic = 'force-dynamic';
+
   entityType: z.enum(["JOB_ORDER", "QUOTATION", "DOCUMENT", "INVOICE"]),
   entityId: z.string().min(1),
   level: z.number().min(1).max(3),

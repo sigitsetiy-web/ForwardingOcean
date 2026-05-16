@@ -5,6 +5,9 @@ import { generateQuotationNumber } from "@/lib/job-number-generator";
 import { z } from "zod";
 
 const quotationItemSchema = z.object({
+
+export const dynamic = 'force-dynamic';
+
   description: z.string().min(1),
   unit: z.string().optional(),
   quantity: z.number().min(0),

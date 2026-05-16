@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 
+
+export const dynamic = 'force-dynamic';
+
 // GET /api/accurate-online/config - Get current connection info
 export async function GET() {
   const signatureSecret = process.env.ACCURATE_SIGNATURE_SECRET || "";

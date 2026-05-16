@@ -3,6 +3,9 @@ import prisma from "@/lib/prisma";
 import { z } from "zod";
 
 const updateCustomerSchema = z.object({
+
+export const dynamic = 'force-dynamic';
+
   name: z.string().min(1).optional(),
   npwp: z.string().optional(),
   address: z.string().optional(),

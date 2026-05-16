@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
+
+export const dynamic = 'force-dynamic';
+
 // GET /api/chat/messages?roomId=xxx - Get messages for a room
 export async function GET(request: NextRequest) {
   try {

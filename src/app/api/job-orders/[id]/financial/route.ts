@@ -4,6 +4,9 @@ import { z } from "zod";
 import { calculateProfit } from "@/lib/profit-calculator";
 
 const revenueSchema = z.object({
+
+export const dynamic = 'force-dynamic';
+
   item: z.string().min(1),
   currency: z.string().default("IDR"),
   amount: z.number().min(0),

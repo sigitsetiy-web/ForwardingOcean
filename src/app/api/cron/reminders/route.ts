@@ -3,6 +3,9 @@ import prisma from "@/lib/prisma";
 import { createNotification } from "@/lib/notifications";
 import { sendDocumentReminderEmail, sendInvoiceOverdueEmail } from "@/lib/email";
 
+
+export const dynamic = 'force-dynamic';
+
 // POST /api/cron/reminders - Run daily reminder checks
 // This endpoint should be called by a cron job (e.g., Vercel Cron)
 export async function POST(request: NextRequest) {

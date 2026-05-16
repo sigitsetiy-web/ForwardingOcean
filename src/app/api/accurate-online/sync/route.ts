@@ -3,6 +3,9 @@ import { getAccurateService } from "@/lib/accurate-online";
 import { z } from "zod";
 
 const syncSchema = z.object({
+
+export const dynamic = 'force-dynamic';
+
   action: z.enum([
     "sync_customer",
     "create_ar_invoice",

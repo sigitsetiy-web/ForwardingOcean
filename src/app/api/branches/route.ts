@@ -3,6 +3,9 @@ import { MOCK_BRANCHES } from "@/lib/mock-data";
 import { z } from "zod";
 
 const branchSchema = z.object({
+
+export const dynamic = 'force-dynamic';
+
   code: z.string().min(1),
   name: z.string().min(1),
   city: z.string().min(1),

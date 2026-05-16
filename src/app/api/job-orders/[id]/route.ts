@@ -3,6 +3,9 @@ import prisma from "@/lib/prisma";
 import { z } from "zod";
 
 const updateJobOrderSchema = z.object({
+
+export const dynamic = 'force-dynamic';
+
   shipper: z.string().optional(),
   consignee: z.string().optional(),
   pol: z.string().optional(),

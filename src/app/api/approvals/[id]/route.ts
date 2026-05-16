@@ -4,6 +4,9 @@ import { z } from "zod";
 import { createNotification } from "@/lib/notifications";
 
 const processApprovalSchema = z.object({
+
+export const dynamic = 'force-dynamic';
+
   status: z.enum(["APPROVED", "REJECTED"]),
   approvedById: z.string().min(1),
   notes: z.string().optional(),

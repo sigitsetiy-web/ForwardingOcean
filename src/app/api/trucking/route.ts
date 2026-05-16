@@ -3,6 +3,9 @@ import prisma from "@/lib/prisma";
 import { z } from "zod";
 
 const createAssignmentSchema = z.object({
+
+export const dynamic = 'force-dynamic';
+
   jobOrderId: z.string().min(1),
   plateNumber: z.string().min(1),
   driverName: z.string().min(1),

@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
+
+export const dynamic = 'force-dynamic';
+
 // Mock data for demo mode
 const MOCK_DASHBOARD = {
   kpiCards: {

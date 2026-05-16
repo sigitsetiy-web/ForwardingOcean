@@ -3,6 +3,9 @@ import prisma from "@/lib/prisma";
 import { z } from "zod";
 
 const updateDocumentSchema = z.object({
+
+export const dynamic = 'force-dynamic';
+
   status: z.enum(["PENDING", "UPLOADED", "VERIFIED", "APPROVED", "SENT"]).optional(),
   verifiedById: z.string().optional(),
   notes: z.string().optional(),

@@ -4,6 +4,9 @@ import prisma from "@/lib/prisma";
 
 const BUCKET_NAME = "documents";
 
+
+export const dynamic = 'force-dynamic';
+
 // POST /api/documents/upload - Upload document file
 export async function POST(request: NextRequest) {
   try {

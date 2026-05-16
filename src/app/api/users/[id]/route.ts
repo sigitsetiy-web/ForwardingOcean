@@ -3,6 +3,9 @@ import prisma from "@/lib/prisma";
 import { z } from "zod";
 
 const updateUserSchema = z.object({
+
+export const dynamic = 'force-dynamic';
+
   name: z.string().min(1).optional(),
   role: z
     .enum([

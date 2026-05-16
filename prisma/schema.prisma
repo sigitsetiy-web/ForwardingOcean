@@ -1016,3 +1016,62 @@ model ChartOfAccount {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// ============================================================
+// CHAT SYSTEM
+// ============================================================
+
+model ChatRoom {
+  id          String   @id @default(cuid())
+  type        String   // "dm", "channel", "jo-thread"
+  name        String
+  description String?
+  jobOrderId  String?  // linked JO (for jo-thread type)
+  isPrivate   Boolean  @default(false)
+  createdById String?
+
+  messages    ChatMessage[]
+  members     ChatMember[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type])
+  @@index([jobOrderId])
+}
+
+model ChatMember {
+  id         String   @id @default(cuid())
+  roomId     String
+  room       ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  userId     String
+  userName   String
+  role       String?  @default("member") // "owner", "admin", "member"
+  lastReadAt DateTime @default(now())
+
+  createdAt DateTime @default(now())
+
+  @@unique([roomId, userId])
+  @@index([roomId])
+  @@index([userId])
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  roomId    String
+  room      ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  senderId  String
+  senderName String
+  content   String
+  type      String   @default("text") // "text", "jo-update", "document", "alert", "milestone", "system"
+  metadata  Json?    // extra data (file info, JO status change, etc.)
+  replyToId String?  // for threaded replies
+  isEdited  Boolean  @default(false)
+  isPinned  Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([roomId, createdAt])
+  @@index([senderId])
+}

@@ -23,7 +23,8 @@ export async function GET() {
     });
     return NextResponse.json({ data: branches });
   } catch {
-    return NextResponse.json({ data: MOCK_BRANCHES });
+    console.error("Branches DB Error:", error);
+    return NextResponse.json({ data: [] });
   }
 }
 

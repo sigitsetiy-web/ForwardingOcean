@@ -191,7 +191,7 @@ export function Sidebar() {
                       }
                       title={collapsed ? item.label : undefined}
                     >
-                      <Icon className={cn("h-[18px] w-[18px] flex-shrink-0")} style={{ color: isActive ? "#FFFFFF" : "#6A6D70" }} />
+                      <Icon className={cn("h-[18px] w-[18px] flex-shrink-0", isActive ? "text-white" : "text-[#6A6D70]")} />
                       {!collapsed && <span>{item.label}</span>}
                     </Link>
                   </li>

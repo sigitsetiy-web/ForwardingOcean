@@ -303,12 +303,12 @@ function DocumentSummary({ detail, entityType }: { detail: Record<string, unknow
           </div>
         </div>
 
-        {doc.notes && (
+        {(doc.notes as string) ? (
           <div className="text-xs bg-white rounded p-2 border border-blue-100">
             <p className="text-blue-600 font-medium">Catatan:</p>
             <p className="mt-0.5">{doc.notes as string}</p>
           </div>
-        )}
+        ) : null}
       </div>
     );
   }

@@ -39,12 +39,12 @@ export function JOShipmentSection({ formData, updateField }: Props) {
             <tbody>
               <tr className="border-t" style={{ borderColor: "#D1D2D4" }}>
                 <td className="px-3 py-2">1</td><td className="px-3 py-2 font-mono">EGHU1234567</td><td className="px-3 py-2 font-mono">SL001234</td>
-                <td className="px-3 py-2">40'HC</td><td className="px-3 py-2">Dry</td><td className="px-3 py-2 text-right">6,250</td><td className="px-3 py-2 text-right">22.8</td>
+                <td className="px-3 py-2">40&#39;HC</td><td className="px-3 py-2">Dry</td><td className="px-3 py-2 text-right">6,250</td><td className="px-3 py-2 text-right">22.8</td>
                 <td className="px-3 py-2 text-center"><span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "#E8F4FD", color: "#0070F2" }}>Loaded</span></td>
               </tr>
               <tr className="border-t" style={{ borderColor: "#D1D2D4" }}>
                 <td className="px-3 py-2">2</td><td className="px-3 py-2 font-mono">EGHU7654321</td><td className="px-3 py-2 font-mono">SL005678</td>
-                <td className="px-3 py-2">40'HC</td><td className="px-3 py-2">Dry</td><td className="px-3 py-2 text-right">6,250</td><td className="px-3 py-2 text-right">22.7</td>
+                <td className="px-3 py-2">40&#39;HC</td><td className="px-3 py-2">Dry</td><td className="px-3 py-2 text-right">6,250</td><td className="px-3 py-2 text-right">22.7</td>
                 <td className="px-3 py-2 text-center"><span className="text-xs px-2 py-0.5 rounded-full" style={{ background: "#E8F4FD", color: "#0070F2" }}>Loaded</span></td>
               </tr>
             </tbody>

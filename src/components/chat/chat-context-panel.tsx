@@ -48,7 +48,7 @@ function JOInfoTab() {
         <span className="text-[9px] px-2 py-0.5 rounded-full font-medium text-white inline-block mt-1" style={{ background: "#BB0000" }}>🔴 CRITICAL — Customs Hold</span>
         <div className="mt-3 space-y-1 text-xs" style={{ color: "#6A6D70" }}>
           <p>🇨🇳 Shanghai → 🇮🇩 Tanjung Emas</p>
-          <p>🚢 Evergreen · EGHU1234567 (40'HC)</p>
+          <p>🚢 Evergreen · EGHU1234567 (40&apos;HC)</p>
           <p>ETD: 01 May · ETA: 15 May</p>
           <p>👤 Officer: Sigit Hartono</p>
         </div>
@@ -135,11 +135,11 @@ function PinnedTab() {
     <div className="space-y-2">
       <p className="text-[10px] font-bold uppercase" style={{ color: "#6A6D70" }}>Pinned Messages</p>
       <div className="p-2 rounded border" style={{ borderColor: "#D1D2D4" }}>
-        <p className="text-xs">📌 "Rate Evergreen: $850/FCL 20' valid s/d 30 May"</p>
+        <p className="text-xs">📌 {`"Rate Evergreen: $850/FCL 20' valid s/d 30 May"`}</p>
         <p className="text-[10px] mt-0.5" style={{ color: "#6A6D70" }}>— Sigit, 10 May</p>
       </div>
       <div className="p-2 rounded border" style={{ borderColor: "#D1D2D4" }}>
-        <p className="text-xs">📌 "NPWP Sritex: 01.234.567.8-513.000"</p>
+        <p className="text-xs">📌 {`"NPWP Sritex: 01.234.567.8-513.000"`}</p>
         <p className="text-[10px] mt-0.5" style={{ color: "#6A6D70" }}>— Titi, 08 May</p>
       </div>
     </div>

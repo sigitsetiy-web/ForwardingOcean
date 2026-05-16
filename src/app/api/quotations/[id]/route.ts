@@ -25,7 +25,7 @@ export async function GET(
         branch: true,
         items: { orderBy: { createdAt: "asc" } },
         approvals: { orderBy: { createdAt: "desc" } },
-        jobOrder: { select: { id: true, number: true, status: true } },
+        salesOrder: { select: { id: true, number: true, status: true } },
       },
     });
 

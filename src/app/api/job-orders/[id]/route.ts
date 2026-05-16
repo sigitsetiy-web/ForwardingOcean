@@ -37,7 +37,7 @@ export async function GET(
       include: {
         customer: true,
         branch: true,
-        quotation: true,
+        salesOrder: true,
         milestones: { orderBy: { createdAt: "asc" } },
         documents: { orderBy: { createdAt: "desc" } },
         revenues: { orderBy: { createdAt: "asc" } },

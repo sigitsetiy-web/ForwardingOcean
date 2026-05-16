@@ -35,6 +35,7 @@ export default function ChatPage() {
   // Ensure default room exists
   useEffect(() => {
     if (user) {
+      // Create general room if not exists
       fetch("/api/chat/rooms", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -45,6 +46,10 @@ export default function ChatPage() {
           createdById: user.id,
           members: [{ userId: user.id, userName: user.name }],
         }),
+      }).then(res => res.json()).then(data => {
+        if (data?.data?.id) {
+          setActiveChat(prev => ({ ...prev, id: data.data.id }));
+        }
       }).catch(() => {});
     }
   }, [user]);

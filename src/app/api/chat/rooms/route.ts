@@ -29,11 +29,34 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/chat/rooms - Create a new room
+// POST /api/chat/rooms - Create a new room (or return existing)
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { type, name, description, jobOrderId, members, createdById } = body;
+
+    // Check if room already exists with same name
+    const existing = await prisma.chatRoom.findFirst({
+      where: { name, type },
+      include: { members: true },
+    });
+
+    if (existing) {
+      // Add member if not already in room
+      if (createdById) {
+        const isMember = existing.members.some((m) => m.userId === createdById);
+        if (!isMember) {
+          await prisma.chatMember.create({
+            data: {
+              roomId: existing.id,
+              userId: createdById,
+              userName: members?.[0]?.userName || "User",
+            },
+          });
+        }
+      }
+      return NextResponse.json({ data: existing });
+    }
 
     const room = await prisma.chatRoom.create({
       data: {

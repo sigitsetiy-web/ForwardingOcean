@@ -75,6 +75,7 @@ export function Header() {
   const notifications = notifData?.data ?? [];
 
   const handleLogout = async () => {
+    localStorage.removeItem("fms_user");
     window.location.href = "/login";
   };
 

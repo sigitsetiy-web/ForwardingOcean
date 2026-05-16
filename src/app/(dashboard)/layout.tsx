@@ -22,8 +22,11 @@ export default function DashboardLayout({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="flex items-center justify-center h-screen" style={{ background: "#F5F6F7" }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 mx-auto" style={{ borderColor: "#0070F2" }}></div>
+          <p className="text-sm mt-3" style={{ color: "#6A6D70" }}>Memuat...</p>
+        </div>
       </div>
     );
   }
@@ -35,7 +38,7 @@ export default function DashboardLayout({
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
-        <main className="flex-1 overflow-y-auto p-6 bg-background">
+        <main className="flex-1 overflow-y-auto p-6" style={{ background: "#F5F6F7" }}>
           {children}
         </main>
       </div>

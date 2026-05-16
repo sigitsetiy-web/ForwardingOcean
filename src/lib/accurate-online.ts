@@ -29,9 +29,11 @@ class AccurateOnlineService {
   }
 
   private getTimestamp(): string {
+    // Always use Asia/Jakarta timezone for Accurate Online API
     const now = new Date();
+    const jakartaTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
     const p = (n: number) => n.toString().padStart(2, "0");
-    return `${p(now.getDate())}/${p(now.getMonth() + 1)}/${now.getFullYear()} ${p(now.getHours())}:${p(now.getMinutes())}:${p(now.getSeconds())}`;
+    return `${p(jakartaTime.getDate())}/${p(jakartaTime.getMonth() + 1)}/${jakartaTime.getFullYear()} ${p(jakartaTime.getHours())}:${p(jakartaTime.getMinutes())}:${p(jakartaTime.getSeconds())}`;
   }
 
   private getSignature(timestamp: string): string {

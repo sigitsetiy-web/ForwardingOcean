@@ -142,6 +142,7 @@ export async function POST(request: NextRequest) {
 
 function getTimestamp(): string {
   const now = new Date();
+  const jakartaTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
   const p = (n: number) => n.toString().padStart(2, "0");
-  return `${p(now.getDate())}/${p(now.getMonth() + 1)}/${now.getFullYear()} ${p(now.getHours())}:${p(now.getMinutes())}:${p(now.getSeconds())}`;
+  return `${p(jakartaTime.getDate())}/${p(jakartaTime.getMonth() + 1)}/${jakartaTime.getFullYear()} ${p(jakartaTime.getHours())}:${p(jakartaTime.getMinutes())}:${p(jakartaTime.getSeconds())}`;
 }

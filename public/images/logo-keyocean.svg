@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" fill="none">
+  <!-- KAY Text -->
+  <text x="10" y="55" font-family="Arial Black, sans-serif" font-weight="900" font-size="52" fill="#2B4C9B">KAY</text>
+  <!-- Red swoosh -->
+  <path d="M 15 62 Q 80 72 170 58" stroke="#E31E24" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <!-- Blue swoosh -->
+  <path d="M 20 66 Q 90 76 180 62" stroke="#2B4C9B" stroke-width="3" stroke-linecap="round" fill="none"/>
+</svg>

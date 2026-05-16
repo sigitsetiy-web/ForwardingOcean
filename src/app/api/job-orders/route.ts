@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { MOCK_JOB_ORDERS } from "@/lib/mock-data";
+
 import { generateJobOrderNumber } from "@/lib/job-number-generator";
 import { z } from "zod";
 

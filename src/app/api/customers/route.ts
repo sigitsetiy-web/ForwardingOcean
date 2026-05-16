@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { MOCK_CUSTOMERS } from "@/lib/mock-data";
+
 import { z } from "zod";
 
 const customerSchema = z.object({

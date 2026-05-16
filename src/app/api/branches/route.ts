@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { MOCK_BRANCHES } from "@/lib/mock-data";
+import prisma from "@/lib/prisma";
 import { z } from "zod";
 
+export const dynamic = "force-dynamic";
+
 const branchSchema = z.object({
-
-export const dynamic = 'force-dynamic';
-
   code: z.string().min(1),
   name: z.string().min(1),
   city: z.string().min(1),
@@ -16,21 +15,19 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const prisma = (await import("@/lib/prisma")).default;
     const branches = await prisma.branch.findMany({
       where: { isActive: true },
       orderBy: { name: "asc" },
     });
     return NextResponse.json({ data: branches });
-  } catch {
+  } catch (error) {
     console.error("Branches DB Error:", error);
-    return NextResponse.json({ data: [] });
+    return NextResponse.json({ data: [], error: String(error) }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const prisma = (await import("@/lib/prisma")).default;
     const body = await request.json();
     const validated = branchSchema.parse(body);
     const branch = await prisma.branch.create({ data: validated });

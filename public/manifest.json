@@ -1,0 +1,50 @@
+{
+  "name": "KeyOcean - Forwarding Management System",
+  "short_name": "KeyOcean",
+  "description": "Sistem manajemen forwarding terintegrasi",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#F5F6F7",
+  "theme_color": "#2B4C9B",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "url": "/dashboard",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Job Orders",
+      "short_name": "JO",
+      "url": "/job-orders",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Quotations",
+      "short_name": "QT",
+      "url": "/quotations",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Chat",
+      "short_name": "Chat",
+      "url": "/chat",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Control Center",
+      "short_name": "Control",
+      "url": "/control-center",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    }
+  ]
+}

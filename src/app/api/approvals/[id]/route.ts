@@ -3,9 +3,10 @@ import prisma from "@/lib/prisma";
 import { z } from "zod";
 import { createNotification } from "@/lib/notifications";
 
+export const dynamic = "force-dynamic";
+
 const processApprovalSchema = z.object({
 
-export const dynamic = 'force-dynamic';
 
   status: z.enum(["APPROVED", "REJECTED"]),
   approvedById: z.string().min(1),

@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import prisma from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 const BUCKET_NAME = "documents";
 
 
-export const dynamic = 'force-dynamic';
 
 // POST /api/documents/upload - Upload document file
 export async function POST(request: NextRequest) {

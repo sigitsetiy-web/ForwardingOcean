@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
 
-export const dynamic = 'force-dynamic';
+
 
 // GET /api/chat/rooms - Get all rooms for current user
 export async function GET(request: NextRequest) {

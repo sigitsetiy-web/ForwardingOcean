@@ -3,9 +3,10 @@ import prisma from "@/lib/prisma";
 import { z } from "zod";
 import { calculateProfit } from "@/lib/profit-calculator";
 
+export const dynamic = "force-dynamic";
+
 const revenueSchema = z.object({
 
-export const dynamic = 'force-dynamic';
 
   item: z.string().min(1),
   currency: z.string().default("IDR"),

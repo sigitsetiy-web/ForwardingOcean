@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
 
+export const dynamic = "force-dynamic";
+
 const updateCustomerSchema = z.object({
 
-export const dynamic = 'force-dynamic';
 
   name: z.string().min(1).optional(),
   npwp: z.string().optional(),

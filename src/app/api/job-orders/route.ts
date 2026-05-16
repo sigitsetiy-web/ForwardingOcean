@@ -4,9 +4,10 @@ import prisma from "@/lib/prisma";
 import { generateJobOrderNumber } from "@/lib/job-number-generator";
 import { z } from "zod";
 
+export const dynamic = "force-dynamic";
+
 const createJobOrderSchema = z.object({
 
-export const dynamic = 'force-dynamic';
 
   customerId: z.string().min(1, "Customer wajib dipilih"),
   customerName: z.string().optional(), // Nama customer dari Accurate

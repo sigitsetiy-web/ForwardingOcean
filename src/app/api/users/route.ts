@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
 
+export const dynamic = "force-dynamic";
+
 const createUserSchema = z.object({
 
-export const dynamic = 'force-dynamic';
 
   email: z.string().email("Email tidak valid"),
   name: z.string().min(1, "Nama wajib diisi"),

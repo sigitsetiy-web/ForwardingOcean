@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
 
+export const dynamic = "force-dynamic";
+
 const updateDocumentSchema = z.object({
 
-export const dynamic = 'force-dynamic';
 
   status: z.enum(["PENDING", "UPLOADED", "VERIFIED", "APPROVED", "SENT"]).optional(),
   verifiedById: z.string().optional(),

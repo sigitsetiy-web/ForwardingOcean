@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
 
+export const dynamic = "force-dynamic";
+
 const createDocumentSchema = z.object({
 
-export const dynamic = 'force-dynamic';
 
   jobOrderId: z.string().min(1),
   type: z.enum([

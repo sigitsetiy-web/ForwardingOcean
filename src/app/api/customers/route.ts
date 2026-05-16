@@ -3,9 +3,10 @@ import prisma from "@/lib/prisma";
 
 import { z } from "zod";
 
+export const dynamic = "force-dynamic";
+
 const customerSchema = z.object({
 
-export const dynamic = 'force-dynamic';
 
   code: z.string().min(1, "Kode pelanggan wajib diisi"),
   name: z.string().min(1, "Nama pelanggan wajib diisi"),

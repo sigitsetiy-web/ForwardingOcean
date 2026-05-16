@@ -4,9 +4,10 @@ import prisma from "@/lib/prisma";
 import { generateQuotationNumber } from "@/lib/job-number-generator";
 import { z } from "zod";
 
+export const dynamic = "force-dynamic";
+
 const quotationItemSchema = z.object({
 
-export const dynamic = 'force-dynamic';
 
   description: z.string().min(1),
   unit: z.string().optional(),

@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAccurateService } from "@/lib/accurate-online";
 import { z } from "zod";
 
+export const dynamic = "force-dynamic";
+
 const syncSchema = z.object({
 
-export const dynamic = 'force-dynamic';
 
   action: z.enum([
     "sync_customer",

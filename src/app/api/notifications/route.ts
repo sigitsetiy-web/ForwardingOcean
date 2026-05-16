@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
 
-export const dynamic = 'force-dynamic';
+
 
 // GET /api/notifications - Get notifications for a user
 export async function GET(request: NextRequest) {

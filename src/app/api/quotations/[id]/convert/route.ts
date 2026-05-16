@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { generateJobOrderNumber } from "@/lib/job-number-generator";
 
+export const dynamic = "force-dynamic";
 
-export const dynamic = 'force-dynamic';
+
 
 // POST /api/quotations/[id]/convert - Convert quotation to job order
 export async function POST(

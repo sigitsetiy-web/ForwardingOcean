@@ -45,14 +45,14 @@ export async function POST(
       );
     }
 
-    // Check if already converted
-    const existingJO = await prisma.jobOrder.findUnique({
+    // Check if already converted - check by looking for existing SO linked to this QT
+    const existingSO = await prisma.salesOrder.findUnique({
       where: { quotationId: quotation.id },
     });
 
-    if (existingJO) {
+    if (existingSO) {
       return NextResponse.json(
-        { error: "Quotation sudah dikonversi ke Job Order" },
+        { error: "Quotation sudah dikonversi" },
         { status: 400 }
       );
     }
@@ -63,11 +63,10 @@ export async function POST(
       quotation.serviceType
     );
 
-    // Create Job Order from Quotation
+    // Create Job Order from Quotation (skip Sales Order for simplicity)
     const jobOrder = await prisma.jobOrder.create({
       data: {
         number: joNumber,
-        quotationId: quotation.id,
         customerId: quotation.customerId,
         serviceType: quotation.serviceType,
         branchId: quotation.branchId,

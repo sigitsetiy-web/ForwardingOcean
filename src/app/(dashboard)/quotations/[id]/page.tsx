@@ -104,7 +104,7 @@ export default function QuotationDetailPage() {
   }
 
   const canConvert =
-    ["APPROVED", "ACCEPTED"].includes(qt.status) && !qt.jobOrder;
+    ["APPROVED", "ACCEPTED"].includes(qt.status) && !qt.salesOrder;
 
   return (
     <div className="space-y-6 max-w-5xl">
@@ -152,7 +152,7 @@ export default function QuotationDetailPage() {
               Approve
             </Button>
           )}
-          {qt.status === "APPROVED" && !qt.jobOrder && (
+          {qt.status === "APPROVED" && !qt.salesOrder && (
             <Button
               variant="outline"
               onClick={() => statusMutation.mutate("SENT")}
@@ -176,7 +176,7 @@ export default function QuotationDetailPage() {
       </div>
 
       {/* Linked Job Order */}
-      {qt.jobOrder && (
+      {qt.salesOrder && (
         <Card className="border-green-200 bg-green-50">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
@@ -186,9 +186,9 @@ export default function QuotationDetailPage() {
                   Sudah dikonversi ke Job Order
                 </span>
               </div>
-              <Link href={`/job-orders/${qt.jobOrder.id}`}>
+              <Link href={`/job-orders/${qt.salesOrder.id}`}>
                 <Button variant="outline" size="sm">
-                  {qt.jobOrder.number}
+                  {qt.salesOrder.number}
                   <ArrowRight className="h-4 w-4 ml-1" />
                 </Button>
               </Link>

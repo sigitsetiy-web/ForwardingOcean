@@ -169,7 +169,6 @@ export async function POST(request: NextRequest) {
         customerId: localCustomerId,
         serviceType: validated.serviceType,
         branchId: validated.branchId,
-        quotationId: validated.quotationId || undefined,
         shipper: validated.shipper,
         consignee: validated.consignee,
         pol: validated.pol,

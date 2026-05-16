@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
     let branchSummary: unknown[] = [];
     if (!branchId) {
       const branches = await prisma.branch.findMany({ where: { isActive: true }, select: { id: true, name: true, code: true } });
-      branchSummary = await Promise.all(branches.map(async (branch) => {
+      branchSummary = await Promise.all(branches.map(async (branch: { id: string; name: string; code: string }) => {
         const [ao, rev] = await Promise.all([
           prisma.jobOrder.count({ where: { branchId: branch.id, status: { in: ["IN_PROGRESS", "CONFIRMED"] } } }),
           prisma.jobOrder.aggregate({ where: { branchId: branch.id, createdAt: { gte: startOfMonth } }, _sum: { totalRevenue: true } }),

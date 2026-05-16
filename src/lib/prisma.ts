@@ -9,12 +9,8 @@ const globalForPrisma = globalThis as unknown as {
 function createPrismaClient(): PrismaClient {
   const connectionString = process.env.DATABASE_URL || "";
 
-  // If no valid connection string, create client without adapter (will fail on queries)
   if (!connectionString || connectionString.includes("[YOUR-PASSWORD]")) {
-    console.warn(
-      "⚠️  DATABASE_URL not configured. Database queries will fail."
-    );
-    // Return a PrismaClient that will throw on actual queries
+    console.warn("⚠️  DATABASE_URL not configured. Database queries will fail.");
     return new PrismaClient({
       adapter: new PrismaPg(
         new Pool({ connectionString: "postgresql://localhost:5432/fms_dev" })
@@ -25,10 +21,7 @@ function createPrismaClient(): PrismaClient {
   const pool = new Pool({ connectionString });
   const adapter = new PrismaPg(pool);
 
-  return new PrismaClient({
-    adapter,
-    log: process.env.NODE_ENV === "development" ? ["warn", "error"] : [],
-  });
+  return new PrismaClient({ adapter });
 }
 
 export const prisma = globalForPrisma.prisma ?? createPrismaClient();

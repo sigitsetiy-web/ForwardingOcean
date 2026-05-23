@@ -42,6 +42,13 @@ export async function updateSession(request: NextRequest) {
 }
 
 function isProtectedRoute(pathname: string): boolean {
-  const publicRoutes = ["/login", "/register", "/forgot-password", "/api/auth"];
+  const publicRoutes = [
+    "/login",
+    "/register",
+    "/forgot-password",
+    "/api/auth",
+    "/print",
+    "/guide",
+  ];
   return !publicRoutes.some((route) => pathname.startsWith(route));
 }

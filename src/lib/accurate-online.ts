@@ -437,4 +437,9 @@ export function getAccurateService(): AccurateOnlineService {
   return accurateService;
 }
 
+/** Reload service after credentials change (e.g. from settings UI). */
+export function resetAccurateService(): void {
+  accurateService = null;
+}
+
 export default AccurateOnlineService;

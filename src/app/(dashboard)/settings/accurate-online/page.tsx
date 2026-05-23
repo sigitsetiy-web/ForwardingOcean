@@ -46,7 +46,11 @@ export default function AccurateOnlineSettingsPage() {
           action: "test",
         }),
       });
-      return res.json();
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Test koneksi gagal");
+      }
+      return data;
     },
   });
 
@@ -62,9 +66,15 @@ export default function AccurateOnlineSettingsPage() {
           action: "save",
         }),
       });
-      return res.json();
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Gagal menyimpan konfigurasi");
+      }
+      return data;
     },
     onSuccess: () => {
+      setSignatureSecret("");
+      setApiToken("");
       refetch();
     },
   });
@@ -328,6 +338,22 @@ export default function AccurateOnlineSettingsPage() {
                 <span className="font-medium text-green-800">
                   {saveMutation.data.message}
                 </span>
+              </div>
+            </div>
+          )}
+
+          {saveMutation.isError && (
+            <div className="p-4 rounded-lg border border-red-200 bg-red-50">
+              <div className="flex items-start gap-2">
+                <XCircle className="h-5 w-5 text-red-600 mt-0.5" />
+                <div>
+                  <span className="font-medium text-red-800">Gagal Menyimpan</span>
+                  <p className="text-sm text-red-700 mt-1">
+                    {saveMutation.error instanceof Error
+                      ? saveMutation.error.message
+                      : "Terjadi kesalahan saat menyimpan"}
+                  </p>
+                </div>
               </div>
             </div>
           )}

@@ -15,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ArrowLeft, ArrowRight, Package, CheckCircle } from "lucide-react";
+import { DocumentPrintButton } from "@/components/print/document-print-button";
 import Link from "next/link";
 import { useCurrentUser } from "@/hooks/use-current-user";
 
@@ -132,7 +133,8 @@ export default function QuotationDetailPage() {
             </p>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <DocumentPrintButton type="quotation" id={id} status={qt.status} />
           {qt.status === "DRAFT" && (
             <Button
               variant="outline"

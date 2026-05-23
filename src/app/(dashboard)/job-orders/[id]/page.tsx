@@ -20,6 +20,7 @@ import {
   Upload,
   ExternalLink,
 } from "lucide-react";
+import { DocumentPrintButton } from "@/components/print/document-print-button";
 import Link from "next/link";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { DocumentUploadDialog } from "@/components/document/upload-dialog";
@@ -107,7 +108,8 @@ export default function JobOrderDetailPage() {
             </p>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <DocumentPrintButton type="job-order" id={id} status={jo.status} />
           <Button variant="outline">Edit</Button>
           <Button onClick={() => setShowStatusDialog(true)}>Update Status</Button>
         </div>
@@ -320,7 +322,7 @@ export default function JobOrderDetailPage() {
                             className="text-primary hover:underline text-xs flex items-center gap-1"
                           >
                             <ExternalLink className="h-3 w-3" />
-                            Lihat
+                            Lihat / Cetak
                           </a>
                         ) : null}
                       </div>

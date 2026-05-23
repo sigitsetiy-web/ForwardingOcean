@@ -1,6 +1,6 @@
 {
-  "name": "KeyOcean - Forwarding Management System",
-  "short_name": "KeyOcean",
+  "name": "KayOcean - Forwarding Management System",
+  "short_name": "KayOcean",
   "description": "Sistem manajemen forwarding terintegrasi",
   "start_url": "/dashboard",
   "display": "standalone",

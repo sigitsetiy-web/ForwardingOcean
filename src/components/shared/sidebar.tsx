@@ -125,15 +125,15 @@ export function Sidebar() {
       >
         {!collapsed && (
           <div className="flex items-center gap-2.5">
-            <img src="/images/logo-keyocean.svg" alt="KeyOcean" className="h-8 w-auto" />
+            <img src="/images/logo-keyocean.svg" alt="KayOcean" className="h-8 w-auto" />
             <div>
-              <span className="font-bold text-[14px]" style={{ color: "#2B4C9B" }}>KeyOcean</span>
+              <span className="font-bold text-[14px]" style={{ color: "#2B4C9B" }}>KayOcean</span>
               <p className="text-[10px] leading-tight" style={{ color: "#6A6D70" }}>Forwarding System</p>
             </div>
           </div>
         )}
         {collapsed && (
-          <img src="/images/logo-keyocean.svg" alt="KeyOcean" className="h-7 w-auto mx-auto" />
+          <img src="/images/logo-keyocean.svg" alt="KayOcean" className="h-7 w-auto mx-auto" />
         )}
         <Button
           variant="ghost"

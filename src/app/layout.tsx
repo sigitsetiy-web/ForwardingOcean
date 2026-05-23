@@ -7,7 +7,7 @@ import { AuthProvider } from "@/components/providers/auth-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "KeyOcean - Forwarding Management System",
+  title: "KayOcean - Forwarding Management System",
   description: "Sistem manajemen forwarding terintegrasi untuk perusahaan jasa freight forwarding",
   manifest: "/manifest.json",
   icons: {
@@ -28,7 +28,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#2B4C9B" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="KeyOcean" />
+        <meta name="apple-mobile-web-app-title" content="KayOcean" />
       </head>
       <body className={inter.className}>
         <QueryProvider>

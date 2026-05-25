@@ -59,6 +59,8 @@ function getGroupedMenu(role: Role): MenuGroup[] {
     opsItems.push({ label: "Sales Order", href: "/sales-orders", icon: ClipboardList });
   if (hasPermission(role, "read", "job_order"))
     opsItems.push({ label: "Job Order", href: "/job-orders", icon: Package });
+  if (hasPermission(role, "read", "job_order"))
+    opsItems.push({ label: "Custom Clearance", href: "/customs-clearance", icon: FileText });
   if (hasPermission(role, "read", "trucking"))
     opsItems.push({ label: "Trucking", href: "/trucking", icon: Truck });
   if (opsItems.length > 0) {

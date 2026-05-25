@@ -42,6 +42,7 @@ export async function GET(
         customer: true,
         branch: true,
         salesOrder: true,
+        customsClearance: true,
         milestones: { orderBy: { createdAt: "asc" } },
         documents: { orderBy: { createdAt: "desc" } },
         revenues: { orderBy: { createdAt: "asc" } },

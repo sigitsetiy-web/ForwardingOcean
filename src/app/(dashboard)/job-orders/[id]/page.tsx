@@ -19,6 +19,7 @@ import {
   ArrowLeft,
   Upload,
   ExternalLink,
+  ShieldCheck,
 } from "lucide-react";
 import { DocumentPrintButton } from "@/components/print/document-print-button";
 import Link from "next/link";
@@ -26,6 +27,7 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { DocumentUploadDialog } from "@/components/document/upload-dialog";
 import { StatusUpdateDialog } from "@/components/job-order/status-update-dialog";
 import { FinancialDialog } from "@/components/job-order/financial-dialog";
+import { CustomsClearanceDialog } from "@/components/job-order/customs-clearance-dialog";
 
 const statusColors: Record<string, string> = {
   DRAFT: "bg-gray-100 text-gray-800",
@@ -56,6 +58,7 @@ export default function JobOrderDetailPage() {
   const [showUploadDialog, setShowUploadDialog] = useState(false);
   const [showStatusDialog, setShowStatusDialog] = useState(false);
   const [showFinancialDialog, setShowFinancialDialog] = useState<"revenue" | "cost" | null>(null);
+  const [showCustomsDialog, setShowCustomsDialog] = useState(false);
 
   const { data, isLoading } = useQuery({
     queryKey: ["job-order", id],
@@ -165,6 +168,10 @@ export default function JobOrderDetailPage() {
           <TabsTrigger value="financial">
             <DollarSign className="h-4 w-4 mr-1" />
             Keuangan
+          </TabsTrigger>
+          <TabsTrigger value="customs">
+            <ShieldCheck className="h-4 w-4 mr-1" />
+            Customs
           </TabsTrigger>
           <TabsTrigger value="trucking">
             <Truck className="h-4 w-4 mr-1" />
@@ -419,6 +426,137 @@ export default function JobOrderDetailPage() {
           </div>
         </TabsContent>
 
+        {/* Customs Tab */}
+        <TabsContent value="customs">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-base">Custom Clearance</CardTitle>
+              <Button size="sm" onClick={() => setShowCustomsDialog(true)}>
+                {jo.customsClearance ? "Edit Data" : "Input Clearance"}
+              </Button>
+            </CardHeader>
+            <CardContent>
+              {!jo.customsClearance ? (
+                <p className="text-center text-muted-foreground py-8">
+                  Belum ada data custom clearance untuk job order ini
+                </p>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-base">Ringkasan Clearance</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <InfoRow
+                        label="Direction"
+                        value={String(jo.customsClearance.direction || "-")}
+                      />
+                      <InfoRow
+                        label="Kantor Pabean"
+                        value={String(jo.customsClearance.kantorPabean || "-")}
+                      />
+                      <InfoRow
+                        label="Jalur Pabean"
+                        value={String(jo.customsClearance.jalurPabean || "-")}
+                      />
+                      <InfoRow
+                        label="Status Clearance"
+                        value={String(jo.customsClearance.statusClearance || "-")}
+                      />
+                      <InfoRow
+                        label="PIB Number"
+                        value={String(jo.customsClearance.pibNumber || "-")}
+                      />
+                      <InfoRow
+                        label="PEB Number"
+                        value={String(jo.customsClearance.pebNumber || "-")}
+                      />
+                      <InfoRow
+                        label="SPPB Number"
+                        value={String(jo.customsClearance.sppbNumber || "-")}
+                      />
+                      <InfoRow
+                        label="NPE Number"
+                        value={String(jo.customsClearance.npeNumber || "-")}
+                      />
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-base">Nilai & Bea</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      <InfoRow
+                        label="Nilai CIF"
+                        value={formatCurrencyOrDash(jo.customsClearance.nilaiCIF)}
+                      />
+                      <InfoRow
+                        label="Nilai FOB"
+                        value={formatCurrencyOrDash(jo.customsClearance.nilaiFOB)}
+                      />
+                      <InfoRow
+                        label="Bea Masuk"
+                        value={formatCurrencyOrDash(jo.customsClearance.beaMasuk)}
+                      />
+                      <InfoRow
+                        label="PPN Impor"
+                        value={formatCurrencyOrDash(jo.customsClearance.ppnImpor)}
+                      />
+                      <InfoRow
+                        label="PPh Impor"
+                        value={formatCurrencyOrDash(jo.customsClearance.pphImpor)}
+                      />
+                      <InfoRow
+                        label="PNBP"
+                        value={formatCurrencyOrDash(jo.customsClearance.pnbp)}
+                      />
+                    </CardContent>
+                  </Card>
+
+                  <Card className="md:col-span-2">
+                    <CardHeader>
+                      <CardTitle className="text-base">Pemeriksaan Fisik</CardTitle>
+                    </CardHeader>
+                    <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-3">
+                        <InfoRow
+                          label="Tanggal Pemeriksaan"
+                          value={
+                            jo.customsClearance.tglPemeriksaan
+                              ? new Date(
+                                  jo.customsClearance.tglPemeriksaan
+                                ).toLocaleDateString("id-ID")
+                              : "-"
+                          }
+                        />
+                        <InfoRow
+                          label="Petugas"
+                          value={String(jo.customsClearance.petugasPemeriksa || "-")}
+                        />
+                        <InfoRow
+                          label="BA Number"
+                          value={String(jo.customsClearance.baNumber || "-")}
+                        />
+                        <InfoRow
+                          label="Hasil"
+                          value={String(jo.customsClearance.hasilPemeriksaan || "-")}
+                        />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Catatan</p>
+                        <p className="text-sm mt-1 whitespace-pre-wrap">
+                          {String(jo.customsClearance.catatanPemeriksaan || "-")}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         {/* Trucking Tab */}
         <TabsContent value="trucking">
           <Card>
@@ -520,6 +658,15 @@ export default function JobOrderDetailPage() {
           onClose={() => setShowFinancialDialog(null)}
         />
       )}
+
+      {showCustomsDialog && user && (
+        <CustomsClearanceDialog
+          jobOrderId={id}
+          userId={user.id}
+          initialData={jo.customsClearance || null}
+          onClose={() => setShowCustomsDialog(false)}
+        />
+      )}
     </div>
   );
 }
@@ -545,4 +692,9 @@ function formatCurrency(amount: number): string {
     currency: "IDR",
     minimumFractionDigits: 0,
   }).format(amount);
+}
+
+function formatCurrencyOrDash(amount: unknown): string {
+  if (amount === null || amount === undefined || amount === "") return "-";
+  return formatCurrency(Number(amount));
 }

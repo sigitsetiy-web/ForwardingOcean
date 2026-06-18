@@ -8,7 +8,7 @@ const globalForPrisma = globalThis as unknown as {
 
 function getPool(): Pool {
   // Use explicit DB vars (most reliable across all platforms)
-  const host = process.env.DB_HOST || "db.yeadywoaxbnjiwsnmnpb.supabase.co";
+  const host = process.env.DB_HOST || "db.ikhxkdmnnwekacuesoyy.supabase.co";
   const port = parseInt(process.env.DB_PORT || "5432");
   const database = process.env.DB_NAME || "postgres";
   const user = process.env.DB_USER || "postgres";

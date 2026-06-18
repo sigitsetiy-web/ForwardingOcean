@@ -3,222 +3,397 @@
 
 ---
 
-**Nomor Proposal:** WDS/PROP/2026/001  
-**Tanggal:** 16 Mei 2026  
-**Berlaku Sampai:** 16 Juni 2026  
+**Nomor Proposal:** WDS/PROP/2026/001-REV.A  
+**Tanggal:** 25 Mei 2026  
+**Berlaku Sampai:** 25 Juni 2026  
 **Diajukan oleh:** Wasilah Digital Sistem  
 **Diajukan kepada:** PT Key Ocean Forwarding
 
 ---
 
-## 1. RINGKASAN EKSEKUTIF
+## 1. Ringkasan Eksekutif
 
-Wasilah Digital Sistem mengajukan proposal implementasi **KayOcean Forwarding Management System (FMS)** — sebuah platform digital terintegrasi yang dirancang khusus untuk mengoptimalkan seluruh alur kerja operasional perusahaan jasa freight forwarding.
+Wasilah Digital Sistem mengajukan proposal implementasi **KayOcean Forwarding Management System (FMS)**, yaitu platform digital terintegrasi yang dirancang untuk mendukung seluruh proses bisnis PT Key Ocean Forwarding mulai dari **lead management, quotation, sales order, job order, operasional shipment, invoicing, hingga laporan profitabilitas dan integrasi Accurate Online**.
 
-Sistem ini mencakup pengelolaan quotation, sales order, job order, kepabeanan, trucking, invoicing (AR/AP), hingga pelaporan profitabilitas — terintegrasi dengan **Accurate Online** sebagai backend akuntansi.
+Setelah dilakukan peninjauan ulang terhadap alur bisnis, kami menilai proposal sebelumnya masih belum menangkap proses awal penjualan secara utuh, karena langsung dimulai dari `quotation`. Padahal, kebutuhan bisnis yang lebih realistis untuk KayOcean adalah:
+
+`Prospect -> Lead -> Qualified -> Customer -> Quotation -> Sales Order -> Job Order -> Invoice -> Payment`
+
+Karena itu, proposal ini disusun sebagai **proposal utuh dan profesional** yang sudah memasukkan **modul CRM / Lead Management** sebagai fondasi awal proses sales. Dengan pendekatan ini, sistem tidak hanya kuat di operasional dan keuangan, tetapi juga mampu mengelola funnel penjualan dari awal sampai closing.
 
 ---
 
-## 2. LATAR BELAKANG
+## 2. Latar Belakang
 
 ### 2.1 Kondisi Saat Ini
-- Proses operasional masih manual/semi-manual (Excel, WhatsApp, email)
-- Tidak ada sistem terpusat untuk tracking status pengiriman
-- Kesulitan menghitung profitabilitas per job order secara real-time
-- Dokumen tersebar di berbagai tempat
-- Komunikasi tim tidak terdokumentasi
 
-### 2.2 Kebutuhan
-- Sistem digital terintegrasi end-to-end
-- Real-time monitoring seluruh job order
-- Kalkulasi profit otomatis
-- Integrasi dengan Accurate Online
-- Multi-cabang, multi-user dengan role-based access
-- Aksesibel dari mana saja (web-based)
+- Proses sales dan operasional masih tersebar di Excel, WhatsApp, email, dan dokumen manual.
+- Belum ada sistem terpusat untuk memantau status lead, quotation, dan shipment.
+- Proses follow-up sales belum terdokumentasi dengan baik.
+- Quotation dan transaksi operasional belum memiliki jejak asal yang jelas dari pipeline sales.
+- Profitabilitas per job order belum dapat dipantau secara real-time.
+- Dokumen operasional dan komunikasi lintas tim belum terdokumentasi dalam satu platform.
+
+### 2.2 Kebutuhan Bisnis
+
+PT Key Ocean Forwarding membutuhkan sistem yang mampu:
+
+- mendigitalisasi proses bisnis end-to-end dari lead sampai payment
+- mendukung multi-cabang dan multi-user dengan role-based access
+- mencatat aktivitas sales dan follow-up customer secara terstruktur
+- mempercepat proses pembuatan quotation dan konversinya ke order
+- memantau operasional shipment secara real-time
+- mengintegrasikan transaksi ke Accurate Online
+- menyediakan laporan manajerial yang akurat dan cepat
 
 ---
 
-## 3. SOLUSI YANG DITAWARKAN
+## 3. Tujuan Implementasi
 
-### 3.1 Modul Sistem
+Implementasi KayOcean FMS ditujukan untuk:
+
+1. Meningkatkan efisiensi proses sales, operasional, dan finance.
+2. Menyediakan alur kerja terintegrasi dari lead hingga invoice.
+3. Mengurangi duplikasi data dan pekerjaan manual antar divisi.
+4. Menyediakan visibilitas status transaksi dan profitabilitas secara real-time.
+5. Menjadikan Accurate Online sebagai backend akuntansi yang terhubung langsung ke proses operasional.
+
+---
+
+## 4. Solusi yang Ditawarkan
+
+### 4.1 Alur Bisnis Target
+
+Sistem akan mendukung alur bisnis berikut:
+
+1. Sales / Marketing membuat dan mengelola `Lead`
+2. Follow-up lead dicatat dalam activity timeline
+3. Lead yang potensial dinaikkan menjadi `Qualified`
+4. Lead yang qualified dikonversi menjadi `Customer`
+5. Sales membuat `Quotation`
+6. Quotation melalui approval dan dikirim ke customer
+7. Quotation yang disetujui dikonversi menjadi `Sales Order`
+8. Sales Order dikonversi menjadi `Job Order`
+9. Tim operasional menjalankan shipment, trucking, dan dokumentasi
+10. Finance membuat invoice dan sinkronisasi ke Accurate Online
+11. Sistem menyediakan monitoring, laporan, dan audit trail end-to-end
+
+### 4.2 Modul Sistem
 
 | No | Modul | Deskripsi |
 |----|-------|-----------|
-| 1 | **Sales Quotation** | Pembuatan penawaran harga dengan SAP Fiori UI, multi-item, approval workflow |
-| 2 | **Sales Order** | Konfirmasi order dari quotation, payment terms, assignment |
-| 3 | **Job Order** | Eksekusi operasional lengkap: booking, customs, trucking, cost monitoring |
-| 4 | **Custom Clearance** | PIB/PEB, jalur pabean, PDRI calculation, SPPB tracking |
-| 5 | **Trucking** | Assignment kendaraan, tracking status, POD |
-| 6 | **Invoice AR** | Multi-party billing, Faktur Pajak, payment tracking, aging |
-| 7 | **Invoice AP** | Vendor invoice + internal fleet cost, approval workflow |
-| 8 | **Control Center** | Dashboard real-time: Kanban, Timeline, Table view |
-| 9 | **Chat System** | Internal messaging, JO-linked threads, document sharing |
-| 10 | **Approval System** | Multi-level approval dengan notifikasi real-time |
-| 11 | **Laporan** | Profitabilitas per JO/customer/cabang, export CSV |
-| 12 | **Integrasi Accurate** | Sync customer, AR/AP invoice, payment status, kurs |
-| 13 | **Master Data** | Pelanggan (dari Accurate), Cabang, User, Vendor |
+| 1 | **CRM & Lead Management** | Pengelolaan prospect, lead, qualified lead, follow-up, assignment, lost reason, dan timeline aktivitas sales |
+| 2 | **Customer Management** | Master data customer, segmentasi, kontak, NPWP, credit limit, rating, dan histori transaksi |
+| 3 | **Sales Quotation** | Pembuatan quotation multi-item berdasarkan jenis layanan, validitas, approval workflow, dan tracking status |
+| 4 | **Sales Order** | Konfirmasi order dari quotation berikut payment terms, assignment, dan referensi transaksi |
+| 5 | **Job Order** | Eksekusi operasional lengkap: shipment, booking, milestones, dokumen, vendor, dan cost/revenue |
+| 6 | **Custom Clearance** | Tracking proses kepabeanan, dokumen PIB/PEB, dan milestone customs |
+| 7 | **Trucking** | Assignment kendaraan, SPK, status perjalanan, POD, dan histori pengiriman darat |
+| 8 | **Invoice AR** | Penagihan customer, billing multi-party, due date, payment tracking, dan aging |
+| 9 | **Invoice AP** | Pengelolaan tagihan vendor, hutang operasional, dan approval pembayaran |
+| 10 | **Approval System** | Multi-level approval untuk quotation, invoice, dan dokumen penting |
+| 11 | **Control Center & Dashboard** | Monitoring real-time untuk lead funnel, quotation, order, shipment, dan alert operasional |
+| 12 | **Reporting** | Laporan conversion funnel, quotation performance, profitability per JO/customer/cabang, dan export data |
+| 13 | **Integrasi Accurate Online** | Sinkronisasi customer, AR/AP invoice, payment status, dan referensi kurs |
+| 14 | **Master Data & Security** | User, role, cabang, vendor, service type, dan kontrol akses berbasis role |
 
-### 3.2 Teknologi
+### 4.3 Teknologi
 
 | Komponen | Teknologi |
 |----------|-----------|
 | Frontend | Next.js 14 + TypeScript + Tailwind CSS |
-| UI Design | SAP Fiori / SAP B1 Theme |
 | Backend | Next.js API Routes + Prisma ORM |
 | Database | PostgreSQL (Supabase) |
+| UI Design | SAP Fiori / enterprise-style dashboard |
 | Integrasi | Accurate Online REST API |
 | Hosting | VPS / Cloud Server |
-| Real-time | Polling + Notification System |
+| Auth & Access | Supabase Auth / JWT + RBAC |
+| Document Output | Print-ready layout + PDF export |
 
-### 3.3 Fitur Unggulan
-- ✅ Desain enterprise-grade (SAP Fiori style)
-- ✅ Multi-cabang dengan RBAC (9 role)
-- ✅ Integrasi langsung ke Accurate Online
-- ✅ Real-time dashboard & control center
-- ✅ Internal chat terintegrasi dengan JO
-- ✅ PWA — bisa di-install sebagai app di desktop/mobile
-- ✅ Responsive — bisa diakses dari HP
-- ✅ Buku panduan digital (PDF downloadable)
+### 4.4 Fitur Unggulan
 
----
-
-## 4. TIMELINE IMPLEMENTASI
-
-| Fase | Durasi | Deliverable |
-|------|--------|-------------|
-| **Fase 1** — Setup & Core | 4 minggu | Login, Master Data, Quotation, Approval |
-| **Fase 2** — Operations | 4 minggu | Sales Order, Job Order, Customs, Trucking |
-| **Fase 3** — Finance | 3 minggu | Invoice AR/AP, Payment, Laporan |
-| **Fase 4** — Integration | 2 minggu | Accurate Online, Dashboard, Chat |
-| **Fase 5** — UAT & Go-Live | 2 minggu | Testing, Training, Go-Live |
-| **Total** | **15 minggu** | |
+- Alur end-to-end dari **lead sampai payment**
+- Dashboard funnel sales dan conversion rate
+- Approval workflow lintas divisi
+- Integrasi langsung dengan Accurate Online
+- Multi-cabang dengan RBAC
+- Print/PDF dokumen operasional
+- Audit trail dan histori aktivitas
+- Responsive dan dapat diakses dari desktop maupun mobile browser
 
 ---
 
-## 5. INVESTASI
+## 5. Ruang Lingkup Pekerjaan
 
-### 5.1 Biaya Pengembangan
+Proposal ini mencakup:
 
-| No | Item | Harga (IDR) |
+- analisis proses bisnis dan finalisasi blueprint sistem
+- desain database dan arsitektur aplikasi
+- pengembangan frontend dan backend
+- implementasi modul CRM, operasional, finance, dan reporting
+- integrasi Accurate Online
+- deployment ke server production
+- training user dan dokumentasi penggunaan
+- masa hypercare setelah go-live
+
+Proposal ini tidak mencakup:
+
+- pengembangan mobile app native terpisah
+- integrasi ke sistem pihak ketiga selain Accurate Online, kecuali disepakati kemudian
+- perubahan scope besar setelah blueprint disetujui
+
+---
+
+## 6. Timeline Implementasi
+
+Durasi implementasi yang direkomendasikan untuk scope ini adalah **20 minggu**.
+
+| Fase | Durasi | Fokus | Deliverable Utama |
+|------|--------|-------|-------------------|
+| **Fase 0** | 1 minggu | Discovery & Blueprint | Final flow bisnis, role matrix, approval matrix, blueprint modul |
+| **Fase 1** | 2 minggu | Foundation & Master Data | Auth, RBAC, branch, user, struktur data inti, audit framework |
+| **Fase 2** | 3 minggu | CRM & Lead Management | Lead pipeline, lead detail, assignment, follow-up, activity timeline |
+| **Fase 3** | 2 minggu | Lead Conversion & Customer Sync | Lead ke customer, duplicate check, customer sync preparation |
+| **Fase 4** | 3 minggu | Quotation & Approval | Quotation multi-item, approval workflow, status tracking, print/PDF |
+| **Fase 5** | 4 minggu | Sales Order & Job Order | SO, JO, milestones, document handling, trucking, cost/revenue |
+| **Fase 6** | 3 minggu | Finance, Accurate, Reports | AR/AP, Accurate integration, payment tracking, dashboard, laporan |
+| **Fase 7** | 2 minggu | UAT, Training, Go-Live | UAT, bug fixing, training, deployment, hypercare |
+|  | **Total** |  | **20 minggu** |
+
+---
+
+## 7. Task Utama per Fase
+
+### 7.1 Fase 0 — Discovery & Blueprint
+
+- workshop requirement dengan owner, sales, operasional, dan finance
+- finalisasi status lead, quotation, sales order, dan job order
+- finalisasi rule konversi lead ke customer
+- finalisasi rule kapan quotation dan sinkronisasi Accurate dilakukan
+- finalisasi blueprint data, API, dan dashboard
+
+### 7.2 Fase 1 — Foundation & Master Data
+
+- setup environment development, staging, production
+- setup auth, role, branch scope, dan permission matrix
+- penyusunan schema database inti
+- implementasi shared activity log dan audit trail dasar
+- setup notifikasi dasar dan struktur logging
+
+### 7.3 Fase 2 — CRM & Lead Management
+
+- CRUD lead dan prospect
+- assignment sales owner / account owner
+- activity timeline: call, email, meeting, visit, note
+- next follow-up date dan reminder
+- lost reason, re-open lead, dan filter pipeline
+- dashboard funnel awal
+
+### 7.4 Fase 3 — Lead Conversion & Customer Sync
+
+- validasi sebelum convert lead
+- duplicate customer checking
+- create customer dari qualified lead
+- relasi lead -> customer -> quotation
+- activity log conversion
+- sinkronisasi customer ke Accurate sesuai aturan bisnis
+
+### 7.5 Fase 4 — Quotation & Approval
+
+- pembuatan quotation per service type
+- rate table dan kalkulasi nilai quotation
+- approval draft -> review -> approved
+- sent / accepted / rejected tracking
+- numbering quotation
+- template print / PDF quotation
+
+### 7.6 Fase 5 — Sales Order & Job Order
+
+- konversi quotation ke sales order
+- konversi sales order ke job order
+- numbering dokumen
+- milestone operasional
+- upload dokumen
+- trucking assignment
+- monitoring revenue dan cost per job order
+
+### 7.7 Fase 6 — Finance, Accurate, Reports
+
+- AR invoice dan AP invoice
+- payment tracking
+- sinkronisasi AR/AP ke Accurate Online
+- sync payment status
+- dashboard conversion funnel
+- report quotation conversion dan profitability
+
+### 7.8 Fase 7 — UAT, Training, Go-Live
+
+- test end-to-end
+- bug fixing prioritas tinggi
+- training sales, ops, finance, dan admin
+- deployment production
+- go-live checklist
+- hypercare minggu awal
+
+---
+
+## 8. Nilai Investasi
+
+### 8.1 Prinsip Penetapan Investasi
+
+Nilai investasi pada proposal ini disusun berdasarkan:
+
+- penambahan scope **CRM & Lead Management** sebelum quotation
+- durasi implementasi yang meningkat dari 15 minggu menjadi 20 minggu
+- kebutuhan integrasi lintas modul sales, operasional, finance, dan accounting
+- kebutuhan audit trail, approval workflow, dashboard, reporting, dan production hardening
+
+Untuk scope end-to-end seperti ini, nilai investasi yang kami anggap **wajar dan kompetitif** adalah **Rp 295.000.000**.
+
+Harga tersebut diposisikan sebagai harga custom development yang masih kompetitif untuk produk internal perusahaan freight forwarding dengan scope dan integrasi sedalam ini.
+
+### 8.2 Rincian Biaya Pengembangan
+
+| No | Item | Nilai (IDR) |
 |----|------|-------------|
-| 1 | Analisis & Desain Sistem | Rp 15.000.000 |
-| 2 | Pengembangan Frontend (13 modul, SAP Fiori UI) | Rp 85.000.000 |
-| 3 | Pengembangan Backend & API (28 endpoints) | Rp 45.000.000 |
-| 4 | Database Design & Setup (PostgreSQL, 25+ tabel) | Rp 10.000.000 |
-| 5 | Integrasi Accurate Online | Rp 20.000.000 |
-| 6 | Chat System & Real-time Features | Rp 15.000.000 |
-| 7 | Control Center (Kanban/Timeline/Table) | Rp 15.000.000 |
-| 8 | Testing & QA | Rp 10.000.000 |
-| 9 | Deployment & Server Setup | Rp 5.000.000 |
-| 10 | Training & Dokumentasi (SOP + Buku Panduan) | Rp 10.000.000 |
-| 11 | Project Management | Rp 10.000.000 |
-| | **SUBTOTAL PENGEMBANGAN** | **Rp 240.000.000** |
+| 1 | Analisis bisnis, discovery, dan blueprint sistem | Rp 20.000.000 |
+| 2 | UI/UX design, wireframe, dan prototype alur utama | Rp 18.000.000 |
+| 3 | Pengembangan modul CRM & Lead Management | Rp 30.000.000 |
+| 4 | Pengembangan Quotation, Approval, Sales Order, dan Job Order | Rp 82.000.000 |
+| 5 | Pengembangan Finance, Accurate Integration, dan Reporting | Rp 48.000.000 |
+| 6 | Pengembangan backend, API, database, auth, dan audit trail | Rp 52.000.000 |
+| 7 | QA, UAT assistance, training, dan dokumentasi | Rp 25.000.000 |
+| 8 | Deployment, hardening production, dan hypercare awal | Rp 20.000.000 |
+|  | **TOTAL INVESTASI PENGEMBANGAN** | **Rp 295.000.000** |
 
-### 5.2 Biaya Berlangganan (Bulanan)
+### 8.3 Biaya Operasional Bulanan
 
-| No | Item | Harga/Bulan (IDR) |
-|----|------|-------------------|
-| 1 | VPS Server (4GB RAM, 80GB SSD) | Rp 300.000 |
-| 2 | Database Supabase (Pro Plan) | Rp 400.000 |
-| 3 | Domain & SSL | Rp 50.000 |
-| 4 | Maintenance & Support | Rp 2.500.000 |
-| | **TOTAL BULANAN** | **Rp 3.250.000** |
+| No | Item | Nilai / Bulan (IDR) |
+|----|------|---------------------|
+| 1 | VPS / Cloud Server production | Rp 500.000 |
+| 2 | Database / Supabase / managed service | Rp 500.000 |
+| 3 | Domain, SSL, dan email service dasar | Rp 100.000 |
+| 4 | Backup, monitoring, dan maintenance server | Rp 250.000 |
+| 5 | Support & maintenance aplikasi | Rp 3.500.000 |
+|  | **TOTAL BULANAN** | **Rp 4.850.000** |
 
-### 5.3 Perbandingan Harga Pasar
+### 8.4 Opsi Pembayaran
 
-| Solusi | Harga | Catatan |
-|--------|-------|---------|
-| **Software SaaS Freight (Linbis, GoFreight)** | $50-500/user/bulan | Tidak customizable, data di luar negeri |
-| **Custom Development (Agency Jakarta)** | Rp 300-500 juta | Referensi: Logique.co.id |
-| **Custom Development (International)** | $20,000-$100,000 | Referensi: SpdLoad, Clockwise |
-| **Oaktree.id (Lokal)** | Rp 150-300 juta | Fitur terbatas |
-| **KayOcean FMS (Proposal ini)** | **Rp 240 juta** | Full custom, integrasi Accurate, SAP UI |
+**Opsi A — Pembayaran Bertahap**
 
-### 5.4 Opsi Pembayaran
-
-**Opsi A — Pembayaran Bertahap:**
 | Termin | Waktu | Jumlah | Keterangan |
 |--------|-------|--------|------------|
-| DP | Awal proyek | Rp 72.000.000 (30%) | Kick-off |
-| Termin 2 | Fase 2 selesai | Rp 72.000.000 (30%) | Operations module |
-| Termin 3 | Fase 4 selesai | Rp 48.000.000 (20%) | Integration |
-| Pelunasan | Go-Live | Rp 48.000.000 (20%) | Final delivery |
+| DP | Awal proyek | Rp 88.500.000 (30%) | Kick-off, discovery, dan setup awal |
+| Termin 2 | Setelah Fase 2 selesai | Rp 73.750.000 (25%) | CRM & Lead Management selesai |
+| Termin 3 | Setelah Fase 5 selesai | Rp 73.750.000 (25%) | Core operational modules selesai |
+| Pelunasan | Go-Live | Rp 59.000.000 (20%) | Final delivery dan handover |
 
-**Opsi B — Pembayaran Bulanan (24 bulan):**
-- Rp 12.000.000/bulan × 24 bulan = Rp 288.000.000
-- Termasuk maintenance & support
+**Opsi B — Retainer 24 Bulan**
+
+- Rp 14.000.000 / bulan x 24 bulan = Rp 336.000.000
+- termasuk maintenance aplikasi dan support pasca implementasi
+
+### 8.5 Posisi Harga di Pasar
+
+| Solusi | Perkiraan Harga | Catatan |
+|--------|------------------|---------|
+| SaaS freight forwarding | USD 50-500 / user / bulan | Cepat digunakan, tetapi sulit di-custom dan bergantung vendor |
+| Custom development agency lokal | Rp 300-500 juta | Umumnya untuk scope end-to-end enterprise |
+| Custom development regional / internasional | USD 20.000-100.000 | Kuat secara teknologi, tetapi biaya lebih tinggi |
+| **KayOcean FMS (proposal ini)** | **Rp 295.000.000** | Scope end-to-end, custom, terintegrasi Accurate, lebih kompetitif |
 
 ---
 
-## 6. GARANSI & SUPPORT
+## 9. Manfaat Implementasi
+
+### 9.1 Efisiensi Operasional
+
+- pengurangan waktu input dan koordinasi manual sebesar 50-70%
+- satu sumber data terpusat untuk sales, ops, dan finance
+- status transaksi lebih mudah dipantau tanpa ketergantungan pada chat pribadi
+
+### 9.2 Kontrol Sales
+
+- funnel sales dari prospect sampai quotation tercatat
+- follow-up sales lebih disiplin karena ada reminder dan activity timeline
+- conversion rate lead -> quotation -> order dapat diukur
+
+### 9.3 Kontrol Keuangan
+
+- profitability per job order terlihat lebih cepat
+- invoice customer dan vendor lebih terkontrol
+- sinkronisasi ke Accurate mengurangi double entry
+
+### 9.4 ROI (Return on Investment)
+
+Estimasi penghematan per bulan:
+
+- efisiensi waktu staf lintas divisi = **Rp 15.000.000**
+- pengurangan invoice / follow-up yang terlewat = **Rp 10.000.000**
+- pengurangan kesalahan data dan rework = **Rp 5.000.000**
+- **total estimasi manfaat = sekitar Rp 30.000.000 / bulan**
+
+Dengan total investasi pengembangan Rp 295.000.000, estimasi **payback period** adalah sekitar **10 bulan**, belum termasuk manfaat manajerial berupa kontrol, transparansi, dan kesiapan scale-up cabang.
+
+---
+
+## 10. Tim Proyek
+
+| Peran | Tanggung Jawab |
+|-------|----------------|
+| Project Manager | Koordinasi proyek, timeline, risk tracking, komunikasi dengan klien |
+| Business Analyst / System Analyst | Requirement gathering, SOP mapping, blueprint sistem |
+| Lead Developer | Arsitektur, backend, integrasi, deployment |
+| Frontend Developer | UI implementation, workflow screens, print/PDF layout |
+| QA Engineer | Test case, regression test, UAT support |
+| PIC Klien | Klarifikasi requirement, review proses, UAT, approval deliverable |
+
+---
+
+## 11. Asumsi dan Dependensi
+
+Proposal ini menggunakan asumsi berikut:
+
+1. Klien menyediakan akses Accurate Online yang diperlukan untuk integrasi.
+2. Klien menyediakan data master awal: user, cabang, customer, vendor, dan referensi layanan.
+3. PIC dari sales, operasional, dan finance tersedia untuk workshop dan UAT.
+4. Perubahan besar pada proses bisnis setelah blueprint disetujui dapat memengaruhi timeline dan biaya.
+5. Scope proyek dibekukan setelah fase discovery untuk menjaga kepastian delivery.
+
+---
+
+## 12. Garansi dan Support
 
 | Item | Ketentuan |
 |------|-----------|
-| Garansi Bug Fix | 6 bulan setelah go-live (gratis) |
-| Response Time | Maks. 4 jam (hari kerja) |
-| Maintenance Bulanan | Update minor, backup, monitoring |
-| Training | 2 sesi training (online/onsite) |
-| Dokumentasi | SOP lengkap + Buku Panduan digital |
-| Source Code | Diserahkan sepenuhnya kepada klien |
+| Garansi bug fix | 6 bulan setelah go-live |
+| Response time support | Maksimal 4 jam kerja untuk tiket prioritas tinggi |
+| Maintenance bulanan | Minor enhancement, monitoring, backup, dan preventive maintenance |
+| Training | 2 sesi training utama + dokumentasi digital |
+| Dokumentasi | SOP, panduan penggunaan, dan handover document |
+| Kepemilikan source code | Diserahkan kepada klien setelah pelunasan |
 
 ---
 
-## 7. KEUNTUNGAN IMPLEMENTASI
+## 13. Syarat dan Ketentuan
 
-### 7.1 Efisiensi Operasional
-- Pengurangan waktu input data: **60-70%**
-- Eliminasi duplikasi data antar departemen
-- Tracking real-time tanpa perlu tanya via WA
-
-### 7.2 Kontrol Keuangan
-- Profit per JO terlihat real-time
-- Invoice tidak terlewat (reminder otomatis)
-- AP vendor terkontrol dengan approval
-
-### 7.3 Skalabilitas
-- Mudah tambah cabang baru
-- Mudah tambah user baru
-- Sistem bisa berkembang sesuai kebutuhan
-
-### 7.4 ROI (Return on Investment)
-Estimasi penghematan per bulan:
-- Efisiensi waktu staff (5 orang × 2 jam/hari × Rp 50.000/jam) = **Rp 15.000.000/bulan**
-- Pengurangan invoice terlewat (2 invoice × Rp 5.000.000) = **Rp 10.000.000/bulan**
-- Pengurangan kesalahan data = **Rp 5.000.000/bulan**
-- **Total penghematan: ~Rp 30.000.000/bulan**
-- **Payback period: ~8 bulan**
+1. Proposal berlaku selama 30 hari sejak tanggal penerbitan.
+2. Harga belum termasuk PPN 12%.
+3. Perubahan scope di luar blueprint yang disetujui akan dibahas sebagai change request.
+4. Integrasi pihak ketiga di luar Accurate Online akan dihitung terpisah.
+5. Klien bertanggung jawab atas keakuratan data master awal yang diberikan.
+6. Jadwal implementasi dapat berubah bila terjadi keterlambatan approval, data, atau akses pihak ketiga.
+7. Wasilah Digital dapat mencantumkan proyek ini sebagai portofolio tanpa membuka data sensitif operasional klien.
 
 ---
 
-## 8. TIM PROYEK
+## 14. Penutup
 
-| Peran | Nama | Tanggung Jawab |
-|-------|------|----------------|
-| Project Manager | Wasilah Digital | Koordinasi, timeline, deliverable |
-| Lead Developer | Wasilah Digital | Arsitektur, coding, deployment |
-| UI/UX Designer | Wasilah Digital | Desain SAP Fiori, responsiveness |
-| QA Engineer | Wasilah Digital | Testing, bug tracking |
-| **PIC Klien** | PT Key Ocean | Requirement, UAT, feedback |
+Kami meyakini bahwa implementasi KayOcean FMS akan memberikan dampak nyata terhadap efisiensi operasional, kualitas kontrol sales, dan akurasi pengelolaan keuangan PT Key Ocean Forwarding.
 
----
+Dengan memasukkan modul **Lead Management** sejak awal, proposal ini menjadi lebih lengkap dan lebih sesuai dengan kebutuhan bisnis nyata perusahaan. Sistem yang dibangun tidak hanya berfungsi sebagai alat operasional, tetapi juga sebagai platform manajemen pertumbuhan bisnis.
 
-## 9. SYARAT & KETENTUAN
-
-1. Proposal berlaku 30 hari sejak tanggal penerbitan
-2. Harga belum termasuk PPN 12%
-3. Perubahan scope setelah kick-off akan dikenakan biaya tambahan
-4. Klien menyediakan akses Accurate Online (API Token)
-5. Klien menyediakan data master awal (pelanggan, cabang, user)
-6. Source code menjadi milik klien setelah pelunasan
-7. Wasilah Digital berhak mencantumkan sebagai portfolio (tanpa data sensitif)
-
----
-
-## 10. PENUTUP
-
-Kami yakin implementasi KayOcean FMS akan memberikan dampak signifikan terhadap efisiensi operasional dan kontrol keuangan PT Key Ocean Forwarding. Dengan pengalaman kami dalam pengembangan sistem enterprise dan pemahaman mendalam terhadap industri freight forwarding, kami siap menjadi mitra teknologi jangka panjang.
-
-Kami menantikan kesempatan untuk berdiskusi lebih lanjut mengenai proposal ini.
+Kami siap mendiskusikan proposal ini lebih lanjut dan menyesuaikan detail implementasi agar tetap selaras dengan prioritas bisnis PT Key Ocean Forwarding.
 
 ---
 
@@ -226,8 +401,8 @@ Kami menantikan kesempatan untuk berdiskusi lebih lanjut mengenai proposal ini.
 
 **Wasilah Digital Sistem**  
 Email: info@wasilah.digital  
-Website: wasilah.digital  
+Website: wasilah.digital
 
 ---
 
-*Dokumen ini bersifat rahasia dan ditujukan hanya untuk PT Key Ocean Forwarding.*
+*Dokumen ini bersifat rahasia dan ditujukan khusus untuk PT Key Ocean Forwarding.*

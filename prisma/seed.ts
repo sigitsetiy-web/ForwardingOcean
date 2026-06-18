@@ -3,7 +3,8 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 
 const pool = new Pool({
-  connectionString: "postgres://postgres:Bismillah%40123Pass@db.yeadywoaxbnjiwsnmnpb.supabase.co:5432/postgres",
+  connectionString: "postgres://postgres:Bismillah%40123Pass@db.ikhxkdmnnwekacuesoyy.supabase.co:5432/postgres",
+  ssl: { rejectUnauthorized: false },
 });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });

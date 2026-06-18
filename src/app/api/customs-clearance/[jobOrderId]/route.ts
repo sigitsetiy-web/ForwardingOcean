@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { authorize, AuthUser } from "@/lib/api-auth";
 import { z } from "zod";
 
 export const dynamic = "force-dynamic";
@@ -47,6 +48,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { jobOrderId: string } }
 ) {
+  const authResult = await authorize(request, "read", "job_order");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const item = await prisma.customsClearance.findUnique({
       where: { jobOrderId: params.jobOrderId },
@@ -66,10 +70,14 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { jobOrderId: string } }
 ) {
+  const authResult = await authorize(request, "update", "job_order");
+  if (authResult instanceof NextResponse) return authResult;
+  const user = authResult as AuthUser;
+
   try {
     const body = await request.json();
     const validated = customsSchema.parse(body);
-    const userId = validated.userId || "system";
+    const userId = user.id;
 
     const jobOrder = await prisma.jobOrder.findUnique({
       where: { id: params.jobOrderId },

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAccurateService } from "@/lib/accurate-online";
+import { requireAuth } from "@/lib/api-auth";
 import { z } from "zod";
 
 export const dynamic = "force-dynamic";
@@ -23,6 +24,9 @@ const syncSchema = z.object({
 
 // POST /api/accurate-online/sync
 export async function POST(request: NextRequest) {
+  const authResult = await requireAuth(request);
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const body = await request.json();
     const validated = syncSchema.parse(body);

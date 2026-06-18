@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAuth } from "@/lib/api-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -6,6 +7,9 @@ export const dynamic = "force-dynamic";
 
 // GET /api/notifications - Get notifications for a user
 export async function GET(request: NextRequest) {
+  const authResult = await requireAuth(request);
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const prisma = (await import("@/lib/prisma")).default;
     const { searchParams } = new URL(request.url);
@@ -45,6 +49,9 @@ export async function GET(request: NextRequest) {
 
 // PUT /api/notifications - Mark notifications as read
 export async function PUT(request: NextRequest) {
+  const authResult = await requireAuth(request);
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const prisma = (await import("@/lib/prisma")).default;
     const body = await request.json();

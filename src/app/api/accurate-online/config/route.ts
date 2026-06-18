@@ -5,6 +5,7 @@ import {
   saveAccurateCredentials,
 } from "@/lib/env-file";
 import { resetAccurateService } from "@/lib/accurate-online";
+import { authorize } from "@/lib/api-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +29,9 @@ async function testAccurateConnection(signatureSecret: string, apiToken: string)
 }
 
 // GET /api/accurate-online/config - Get current connection info
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const authResult = await authorize(request, "read", "settings");
+  if (authResult instanceof NextResponse) return authResult;
   const signatureSecret = process.env.ACCURATE_SIGNATURE_SECRET || "";
   const apiToken = process.env.ACCURATE_API_TOKEN || "";
   const configured = hasAccurateCredentials();
@@ -85,6 +88,9 @@ export async function GET() {
 
 // POST /api/accurate-online/config - Test or save credentials
 export async function POST(request: NextRequest) {
+  const authResult = await authorize(request, "update", "settings");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const body = await request.json();
     const { signatureSecret, apiToken, action } = body;

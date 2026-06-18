@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { requireAuth, AuthUser } from "@/lib/api-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -7,6 +8,9 @@ export const dynamic = "force-dynamic";
 
 // GET /api/chat/messages?roomId=xxx - Get messages for a room
 export async function GET(request: NextRequest) {
+  const authResult = await requireAuth(request);
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const { searchParams } = new URL(request.url);
     const roomId = searchParams.get("roomId") || "";
@@ -36,6 +40,9 @@ export async function GET(request: NextRequest) {
 
 // POST /api/chat/messages - Send a message
 export async function POST(request: NextRequest) {
+  const authResult = await requireAuth(request);
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const body = await request.json();
     const { roomId, senderId, senderName, content, type, metadata, replyToId } = body;

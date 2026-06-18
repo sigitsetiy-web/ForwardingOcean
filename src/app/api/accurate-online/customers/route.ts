@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAccurateService } from "@/lib/accurate-online";
+import { requireAuth } from "@/lib/api-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -7,6 +8,9 @@ export const dynamic = "force-dynamic";
 
 // GET /api/accurate-online/customers - Fetch customers from Accurate Online
 export async function GET(request: NextRequest) {
+  const authResult = await requireAuth(request);
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "1");
@@ -55,6 +59,9 @@ export async function GET(request: NextRequest) {
 
 // POST /api/accurate-online/customers - Import customers from Accurate to FMS
 export async function POST(request: NextRequest) {
+  const authResult = await requireAuth(request);
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const body = await request.json();
     const { customers } = body; // Array of AO customer objects to import

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { authorize, AuthUser } from "@/lib/api-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -7,6 +8,9 @@ export const dynamic = "force-dynamic";
 
 // GET /api/reports/export - Export profitability report as CSV
 export async function GET(request: NextRequest) {
+  const authResult = await authorize(request, "export", "report");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const { searchParams } = new URL(request.url);
     const branchId = searchParams.get("branchId") || "";

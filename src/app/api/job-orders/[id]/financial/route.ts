@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { authorize, AuthUser } from "@/lib/api-auth";
 import { z } from "zod";
 import { calculateProfit } from "@/lib/profit-calculator";
 
@@ -36,6 +37,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const authResult = await authorize(request, "read", "invoice");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const [revenues, costs] = await Promise.all([
       prisma.jobRevenue.findMany({
@@ -88,6 +92,9 @@ export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const authResult = await authorize(request, "update", "invoice");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const body = await request.json();
     const validated = financialSchema.parse(body);

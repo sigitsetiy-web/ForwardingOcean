@@ -30,6 +30,9 @@ const updateStatusSchema = z.object({
 
 // GET /api/trucking
 export async function GET(request: NextRequest) {
+  const authResult = await authorize(request, "read", "trucking");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const { searchParams } = new URL(request.url);
     const jobOrderId = searchParams.get("jobOrderId") || "";
@@ -58,6 +61,9 @@ export async function GET(request: NextRequest) {
 
 // POST /api/trucking
 export async function POST(request: NextRequest) {
+  const authResult = await authorize(request, "create", "trucking");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const body = await request.json();
     const validated = createAssignmentSchema.parse(body);

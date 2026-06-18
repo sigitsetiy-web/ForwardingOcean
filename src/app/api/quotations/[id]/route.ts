@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { authorize, AuthUser } from "@/lib/api-auth";
 import { z } from "zod";
 
 export const dynamic = "force-dynamic";
@@ -21,6 +22,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const authResult = await authorize(request, "read", "quotation");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const quotation = await prisma.quotation.findUnique({
       where: { id: params.id },
@@ -55,6 +59,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const authResult = await authorize(request, "update", "quotation");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const body = await request.json();
     const validated = updateQuotationSchema.parse(body);

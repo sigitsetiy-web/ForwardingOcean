@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { authorize, AuthUser } from "@/lib/api-auth";
 import { generateJobOrderNumber } from "@/lib/job-number-generator";
 
 export const dynamic = "force-dynamic";
@@ -11,16 +12,14 @@ export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const authResult = await authorize(request, "create", "job_order");
+  if (authResult instanceof NextResponse) return authResult;
+  const user = authResult as AuthUser;
+
   try {
     const body = await request.json();
-    const { createdById, assignedTo } = body;
-
-    if (!createdById) {
-      return NextResponse.json(
-        { error: "createdById wajib diisi" },
-        { status: 400 }
-      );
-    }
+    const { assignedTo } = body;
+    const createdById = user.id;
 
     // Get quotation with all details
     const quotation = await prisma.quotation.findUnique({

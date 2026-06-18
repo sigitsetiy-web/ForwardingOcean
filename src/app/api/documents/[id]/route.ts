@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { authorize, AuthUser } from "@/lib/api-auth";
 import { z } from "zod";
 
 export const dynamic = "force-dynamic";
@@ -18,6 +19,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const authResult = await authorize(request, "read", "document");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const document = await prisma.document.findUnique({
       where: { id: params.id },
@@ -49,10 +53,14 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const authResult = await authorize(request, "update", "document");
+  if (authResult instanceof NextResponse) return authResult;
+  const user = authResult as AuthUser;
+
   try {
     const body = await request.json();
     const validated = updateDocumentSchema.parse(body);
-    const userId = body.userId || "system";
+    const userId = user.id;
 
     const current = await prisma.document.findUnique({
       where: { id: params.id },
@@ -110,6 +118,10 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const authResult = await authorize(request, "delete", "document");
+  if (authResult instanceof NextResponse) return authResult;
+  const user = authResult as AuthUser;
+
   try {
     const document = await prisma.document.findUnique({
       where: { id: params.id },
@@ -131,7 +143,7 @@ export async function DELETE(
         jobOrderId: document.jobOrderId,
         action: "DOCUMENT_DELETED",
         description: `Dokumen "${document.name}" dihapus`,
-        userId: "system",
+        userId: user.id,
       },
     });
 

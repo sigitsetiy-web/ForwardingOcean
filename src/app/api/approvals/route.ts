@@ -25,6 +25,9 @@ const processApprovalSchema = z.object({
 
 // GET /api/approvals - List pending approvals
 export async function GET(request: NextRequest) {
+  const authResult = await authorize(request, "read", "approval");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status") || "PENDING";
@@ -52,6 +55,9 @@ export async function GET(request: NextRequest) {
 
 // POST /api/approvals - Create approval request
 export async function POST(request: NextRequest) {
+  const authResult = await authorize(request, "create", "approval");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const body = await request.json();
     const validated = createApprovalSchema.parse(body);

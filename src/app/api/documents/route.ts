@@ -38,6 +38,9 @@ const createDocumentSchema = z.object({
 
 // GET /api/documents
 export async function GET(request: NextRequest) {
+  const authResult = await authorize(request, "read", "document");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const { searchParams } = new URL(request.url);
     const jobOrderId = searchParams.get("jobOrderId") || "";
@@ -70,6 +73,9 @@ export async function GET(request: NextRequest) {
 
 // POST /api/documents
 export async function POST(request: NextRequest) {
+  const authResult = await authorize(request, "create", "document");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const body = await request.json();
     const validated = createDocumentSchema.parse(body);

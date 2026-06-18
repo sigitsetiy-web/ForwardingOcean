@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { authorize, AuthUser } from "@/lib/api-auth";
 import { z } from "zod";
 
 export const dynamic = "force-dynamic";
@@ -29,6 +30,9 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const authResult = await authorize(request, "create", "branch");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const body = await request.json();
     const validated = branchSchema.parse(body);

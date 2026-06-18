@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import prisma from "@/lib/prisma";
+import { requireAuth } from "@/lib/api-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +11,9 @@ const BUCKET_NAME = "documents";
 
 // POST /api/documents/upload - Upload document file
 export async function POST(request: NextRequest) {
+  const authResult = await requireAuth(request);
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File | null;

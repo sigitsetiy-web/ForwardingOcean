@@ -76,13 +76,13 @@ export async function GET(request: NextRequest) {
       totalPages: Math.ceil(total / pageSize),
     });
   } catch (error) {
-    console.warn("Customers: Using mock data");
+    console.error("Error fetching customers:", error);
     return NextResponse.json({
-      data: MOCK_CUSTOMERS,
-      total: MOCK_CUSTOMERS.length,
+      data: [],
+      total: 0,
       page: 1,
       pageSize: 20,
-      totalPages: 1,
+      totalPages: 0,
     });
   }
 }

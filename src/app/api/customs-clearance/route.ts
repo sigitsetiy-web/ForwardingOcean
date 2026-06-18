@@ -1,30 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { authorize, AuthUser } from "@/lib/api-auth";
 
 export const dynamic = "force-dynamic";
 
-const MOCK_CUSTOMS_CLEARANCE = [
-  {
-    id: "mock-cc-1",
-    direction: "import",
-    pibNumber: "PIB-2026-001",
-    pebNumber: null,
-    sppbNumber: "SPPB-2026-001",
-    kantorPabean: "Tanjung Emas",
-    jalurPabean: "HIJAU",
-    statusClearance: "SPPB TERBIT",
-    updatedAt: new Date().toISOString(),
-    jobOrder: {
-      id: "mock-jo-1",
-      number: "SMG-IMP-202605-0001",
-      serviceType: "SEA_IMPORT",
-      customer: { id: "mock-cust-1", name: "PT Contoh Import Indonesia" },
-      branch: { id: "mock-branch-1", name: "Semarang", code: "SMG" },
-    },
-  },
-];
-
 export async function GET(request: NextRequest) {
+  const authResult = await authorize(request, "read", "job_order");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "1");
@@ -91,13 +74,13 @@ export async function GET(request: NextRequest) {
       totalPages: Math.ceil(total / pageSize),
     });
   } catch (error) {
-    console.warn("Customs Clearance: Using mock data", error);
+    console.error("Customs Clearance error:", error);
     return NextResponse.json({
-      data: MOCK_CUSTOMS_CLEARANCE,
-      total: MOCK_CUSTOMS_CLEARANCE.length,
+      data: [],
+      total: 0,
       page: 1,
       pageSize: 20,
-      totalPages: 1,
+      totalPages: 0,
     });
   }
 }

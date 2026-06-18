@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { requireAuth, AuthUser } from "@/lib/api-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -7,6 +8,9 @@ export const dynamic = "force-dynamic";
 
 // GET /api/chat/rooms - Get all rooms for current user
 export async function GET(request: NextRequest) {
+  const authResult = await requireAuth(request);
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId") || "";
@@ -35,6 +39,9 @@ export async function GET(request: NextRequest) {
 
 // POST /api/chat/rooms - Create a new room (or return existing)
 export async function POST(request: NextRequest) {
+  const authResult = await requireAuth(request);
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const body = await request.json();
     const { type, name, description, jobOrderId, members, createdById } = body;

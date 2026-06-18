@@ -81,6 +81,9 @@ export async function GET(request: NextRequest) {
 
 // POST /api/users - Create new user
 export async function POST(request: NextRequest) {
+  const authResult = await authorize(request, "create", "user");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const body = await request.json();
     const validated = createUserSchema.parse(body);

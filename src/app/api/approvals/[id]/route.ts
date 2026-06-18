@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
 import { createNotification } from "@/lib/notifications";
+import { authorize } from "@/lib/api-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +19,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const authResult = await authorize(request, "approve", "approval");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const body = await request.json();
     const validated = processApprovalSchema.parse(body);

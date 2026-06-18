@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { authorize, AuthUser } from "@/lib/api-auth";
 import { z } from "zod";
 
 export const dynamic = "force-dynamic";
@@ -27,6 +28,9 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const authResult = await authorize(request, "read", "customer");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const customer = await prisma.customer.findUnique({
       where: { id: params.id },
@@ -85,6 +89,9 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const authResult = await authorize(request, "update", "customer");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const body = await request.json();
     const validated = updateCustomerSchema.parse(body);
@@ -115,6 +122,9 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const authResult = await authorize(request, "delete", "customer");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     await prisma.customer.update({
       where: { id: params.id },

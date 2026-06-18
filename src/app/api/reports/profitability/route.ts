@@ -8,6 +8,9 @@ export const dynamic = "force-dynamic";
 
 // GET /api/reports/profitability - Profitability report
 export async function GET(request: NextRequest) {
+  const authResult = await authorize(request, "read", "report");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const { searchParams } = new URL(request.url);
     const branchId = searchParams.get("branchId") || "";

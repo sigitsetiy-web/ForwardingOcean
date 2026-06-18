@@ -52,6 +52,63 @@ export default function NewInvoicePage() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleSaveInvoice = async () => {
+    try {
+      // Need a job order ID to link the invoice
+      const joRes = await fetch("/api/job-orders?pageSize=1");
+      const joData = await joRes.json();
+      const jobOrderId = joData.data?.[0]?.id;
+
+      if (!jobOrderId) { alert("Belum ada Job Order. Buat JO terlebih dahulu."); return; }
+
+      const res = await fetch("/api/invoices", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jobOrderId,
+          customerId: undefined,
+          invoiceType: formData.invoiceType,
+          billingPartyType: formData.billingPartyType,
+          billingCompany: formData.companyName,
+          billingAddress: formData.billingAddress,
+          billingContact: formData.contactPerson,
+          billingEmail: formData.email,
+          billingCountry: formData.country,
+          taxStatus: formData.taxStatus,
+          currency: formData.currency,
+          exchangeRate: formData.exchangeRate ? parseFloat(formData.exchangeRate) : undefined,
+          paymentTerms: formData.paymentTerms,
+          bankName: formData.bankName,
+          bankAccount: formData.accountNumber,
+          swiftCode: formData.swiftCode,
+          dueDate: formData.dueDate,
+          createdById: user?.id,
+          lineItems: lineItems.map(item => ({
+            description: item.description,
+            category: item.category,
+            uom: item.uom,
+            quantity: item.qty,
+            unitPrice: item.rate,
+            amount: item.qty * item.rate,
+            ppn: item.ppn,
+            ppnAmount: item.ppn ? item.qty * item.rate * 0.12 : 0,
+            notes: item.notes,
+          })),
+        }),
+      });
+
+      if (res.ok) {
+        alert("Invoice berhasil disimpan!");
+        router.push("/finance");
+      } else {
+        const err = await res.json();
+        alert(err.error || "Gagal menyimpan invoice");
+      }
+    } catch (e) {
+      alert("Error: " + (e instanceof Error ? e.message : "Unknown"));
+    }
+  };
+
   return (
     <div className="min-h-screen" style={{ background: "#F5F6F7" }}>
       {/* Breadcrumb */}
@@ -89,8 +146,8 @@ export default function NewInvoicePage() {
             <Btn icon={<RotateCcw className="h-4 w-4" />} label="Create Credit Note" v="ghost" />
           </div>
           <div className="flex gap-2">
-            <Btn icon={<Save className="h-4 w-4" />} label="Save Draft" v="ghost" />
-            <Btn icon={<Send className="h-4 w-4" />} label="Submit for Approval" v="outline" />
+            <Btn icon={<Save className="h-4 w-4" />} label="Save Draft" v="ghost" onClick={handleSaveInvoice} />
+            <Btn icon={<Send className="h-4 w-4" />} label="Submit for Approval" v="outline" onClick={handleSaveInvoice} />
             <Btn icon={<Mail className="h-4 w-4" />} label="Mark as Sent" v="primary" />
             <Btn icon={<CreditCard className="h-4 w-4" />} label="Record Payment" v="success" />
             <Btn icon={<X className="h-4 w-4" />} label="Cancel" v="danger" onClick={() => router.push("/finance")} />

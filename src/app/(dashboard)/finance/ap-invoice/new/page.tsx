@@ -19,6 +19,49 @@ export default function NewAPInvoicePage() {
   const { user } = useCurrentUser();
   const [vendorType, setVendorType] = useState<"external" | "internal" | null>(null);
 
+  const handleSaveAP = async () => {
+    try {
+      const joRes = await fetch("/api/job-orders?pageSize=1");
+      const joData = await joRes.json();
+      const jobOrderId = joData.data?.[0]?.id;
+
+      if (!jobOrderId) { alert("Belum ada Job Order. Buat JO terlebih dahulu."); return; }
+
+      const res = await fetch("/api/vendor-invoices", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jobOrderId,
+          vendorType: "EMKL",
+          vendorName: "PT EMKL Maju Jaya",
+          vendorCode: "V.00022",
+          vendorNpwp: "02.345.678.9-012.000",
+          vendorPkpStatus: "PKP",
+          vendorInvoiceNo: "INV/MJ/2026/001",
+          apType: "CUSTOMS",
+          currency: "IDR",
+          paymentTerms: "NET14",
+          createdById: user?.id,
+          lineItems: [
+            { description: "Jasa Pengurusan PIB", category: "Customs", uom: "Per Shipment", quantity: 1, unitPrice: 3500000, amount: 3500000, ppnMasukan: true },
+            { description: "PNBP", category: "Customs", uom: "Per Shipment", quantity: 1, unitPrice: 500000, amount: 500000, ppnMasukan: false },
+            { description: "Handling Fee", category: "Handling", uom: "Per Shipment", quantity: 1, unitPrice: 500000, amount: 500000, ppnMasukan: true },
+          ],
+        }),
+      });
+
+      if (res.ok) {
+        alert("Vendor Invoice (AP) berhasil disimpan!");
+        router.push("/finance");
+      } else {
+        const err = await res.json();
+        alert(err.error || "Gagal menyimpan AP");
+      }
+    } catch (e) {
+      alert("Error: " + (e instanceof Error ? e.message : "Unknown"));
+    }
+  };
+
   // If not selected yet, show selector
   if (!vendorType) {
     return <APVendorSelector onSelect={setVendorType} />;
@@ -74,8 +117,8 @@ export default function NewAPInvoicePage() {
             <Btn icon={<Paperclip className="h-4 w-4" />} label="Attach Invoice" v="ghost" />
           </div>
           <div className="flex gap-2">
-            <Btn icon={<Save className="h-4 w-4" />} label="Save Draft" v="ghost" />
-            <Btn icon={<Send className="h-4 w-4" />} label="Submit for Approval" v="outline" />
+            <Btn icon={<Save className="h-4 w-4" />} label="Save Draft" v="ghost" onClick={handleSaveAP} />
+            <Btn icon={<Send className="h-4 w-4" />} label="Submit for Approval" v="outline" onClick={handleSaveAP} />
             <Btn icon={<Calendar className="h-4 w-4" />} label="Schedule Payment" v="primary" />
             <Btn icon={<CheckCircle className="h-4 w-4" />} label="Mark as Paid" v="success" />
             <Btn icon={<AlertTriangle className="h-4 w-4" />} label="Dispute" v="warning" />

@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { authorize, AuthUser } from "@/lib/api-auth";
 
 export const dynamic = "force-dynamic";
 
 
 
 export async function GET(request: NextRequest) {
+  const authResult = await authorize(request, "read", "dashboard");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const { searchParams } = new URL(request.url);
     const branchId = searchParams.get("branchId") || "";

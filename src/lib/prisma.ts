@@ -8,11 +8,17 @@ const globalForPrisma = globalThis as unknown as {
 
 function getPool(): Pool {
   // Use explicit DB vars (most reliable across all platforms)
-  const host = process.env.DB_HOST || "db.ikhxkdmnnwekacuesoyy.supabase.co";
+  const host = process.env.DB_HOST;
   const port = parseInt(process.env.DB_PORT || "5432");
   const database = process.env.DB_NAME || "postgres";
   const user = process.env.DB_USER || "postgres";
-  const password = process.env.DB_PASSWORD || "Bismillah@123Pass";
+  const password = process.env.DB_PASSWORD;
+
+  if (!host || !password) {
+    console.error("DB_HOST or DB_PASSWORD not set!");
+    // Fallback — will fail but won't expose credentials in source
+    return new Pool({ connectionString: process.env.DATABASE_URL || "", ssl: { rejectUnauthorized: false } });
+  }
 
   return new Pool({
     host,

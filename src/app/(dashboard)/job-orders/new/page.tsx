@@ -58,6 +58,62 @@ export default function NewJobOrderPage() {
     "Mark as Arrived", "Mark as Delivered", "Close JO",
   ];
 
+  const [saving, setSaving] = useState(false);
+
+  const handleSaveDraft = async () => {
+    setSaving(true);
+    try {
+      // Get first branch for now
+      const branchRes = await fetch("/api/branches");
+      const branchData = await branchRes.json();
+      const branchId = branchData.data?.[0]?.id;
+
+      // Get or create customer
+      const custRes = await fetch("/api/customers?pageSize=1");
+      const custData = await custRes.json();
+      const customerId = custData.data?.[0]?.id;
+
+      if (!branchId || !customerId) {
+        alert("Data cabang atau pelanggan belum tersedia");
+        return;
+      }
+
+      const res = await fetch("/api/job-orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerId,
+          serviceType: "SEA_IMPORT",
+          branchId,
+          shipper: formData.shipperName,
+          consignee: formData.consigneeName,
+          pol: formData.pol,
+          pod: formData.pod,
+          commodity: formData.commodity,
+          hsCode: formData.hsCode,
+          incoterms: formData.incoterms,
+          vesselName: formData.vesselName,
+          voyageNo: formData.voyageNo,
+          etd: formData.etd || undefined,
+          eta: formData.eta || undefined,
+          createdById: user?.id || "",
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        router.push(`/job-orders/${data.data.id}`);
+      } else {
+        const err = await res.json();
+        alert(err.error || "Gagal menyimpan Job Order");
+      }
+    } catch (e) {
+      alert("Error: " + (e instanceof Error ? e.message : "Unknown"));
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <div className="min-h-screen" style={{ background: "#F5F6F7" }}>
       {/* Breadcrumb */}
@@ -93,8 +149,8 @@ export default function NewJobOrderPage() {
             <Btn icon={<Paperclip className="h-4 w-4" />} label="Attach File" v="ghost" />
           </div>
           <div className="flex gap-2">
-            <Btn icon={<Save className="h-4 w-4" />} label="Save Draft" v="ghost" />
-            <Btn icon={<Send className="h-4 w-4" />} label="Submit JO" v="outline" />
+            <Btn icon={<Save className="h-4 w-4" />} label="Save Draft" v="ghost" onClick={handleSaveDraft} />
+            <Btn icon={<Send className="h-4 w-4" />} label="Submit JO" v="outline" onClick={handleSaveDraft} />
             {/* Update Status Dropdown */}
             <div className="relative">
               <button onClick={() => setStatusDropdown(!statusDropdown)} className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium text-white" style={{ background: "#0070F2" }}>

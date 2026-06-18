@@ -108,6 +108,55 @@ export default function NewSalesOrderPage() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleSave = async () => {
+    try {
+      const branchRes = await fetch("/api/branches");
+      const branchData = await branchRes.json();
+      const branchId = branchData.data?.[0]?.id;
+      const custRes = await fetch("/api/customers?pageSize=1");
+      const custData = await custRes.json();
+      const customerId = custData.data?.[0]?.id;
+
+      if (!branchId || !customerId) { alert("Data belum tersedia"); return; }
+
+      const res = await fetch("/api/sales-orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customerId,
+          serviceType: "SEA_IMPORT",
+          branchId,
+          priority: formData.priority,
+          currency: formData.currency,
+          totalAmount: 95850000,
+          paymentTerms: formData.paymentTerms,
+          billingTrigger: formData.billingTrigger,
+          poNumber: formData.poNumber,
+          poDate: formData.poDate || undefined,
+          billingAttention: formData.billingAttention,
+          salesPerson: formData.salesPerson,
+          incoterms: formData.incoterms,
+          pol: formData.pol,
+          pod: formData.pod,
+          etd: formData.etd || undefined,
+          eta: formData.eta || undefined,
+          commodity: formData.commodity,
+          createdById: user?.id || "",
+        }),
+      });
+
+      if (res.ok) {
+        alert("Sales Order berhasil disimpan!");
+        router.push("/sales-orders");
+      } else {
+        const err = await res.json();
+        alert(err.error || "Gagal menyimpan");
+      }
+    } catch (e) {
+      alert("Error: " + (e instanceof Error ? e.message : "Unknown"));
+    }
+  };
+
   return (
     <div className="min-h-screen" style={{ background: "#F5F6F7" }}>
       {/* Breadcrumb */}
@@ -149,8 +198,8 @@ export default function NewSalesOrderPage() {
             <ActionBtn icon={<Paperclip className="h-4 w-4" />} label="Attach File" variant="ghost" />
           </div>
           <div className="flex gap-2">
-            <ActionBtn icon={<Save className="h-4 w-4" />} label="Save Draft" variant="ghost" />
-            <ActionBtn icon={<Send className="h-4 w-4" />} label="Submit for Approval" variant="outline" />
+            <ActionBtn icon={<Save className="h-4 w-4" />} label="Save Draft" variant="ghost" onClick={handleSave} />
+            <ActionBtn icon={<Send className="h-4 w-4" />} label="Submit for Approval" variant="outline" onClick={handleSave} />
             <ActionBtn icon={<CheckCircle className="h-4 w-4" />} label="Confirm SO" variant="primary" />
             <ActionBtn icon={<X className="h-4 w-4" />} label="Cancel SO" variant="danger" onClick={() => router.push("/sales-orders")} />
           </div>

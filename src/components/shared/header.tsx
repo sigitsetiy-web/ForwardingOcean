@@ -76,6 +76,7 @@ export function Header() {
 
   const handleLogout = async () => {
     localStorage.removeItem("fms_user");
+    await fetch("/api/auth/logout", { method: "POST" });
     window.location.href = "/login";
   };
 

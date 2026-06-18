@@ -32,18 +32,29 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Password salah" }, { status: 401 });
     }
 
-    // Return user data (no JWT for simplicity — use session/localStorage on client)
-    return NextResponse.json({
+    // Return user data + set cookie
+    const response = NextResponse.json({
       user: {
         id: user.id,
         email: user.email,
         name: user.name,
         role: user.role,
         branchId: user.branchId,
-        supabaseUserId: user.id, // use same id
+        supabaseUserId: user.id,
       },
       message: "Login berhasil",
     });
+
+    // Set httpOnly cookie for server-side auth
+    response.cookies.set("fms_user_id", user.id, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: "/",
+    });
+
+    return response;
   } catch (error) {
     console.error("Login error:", error);
     return NextResponse.json({ error: "Login gagal. Coba lagi." }, { status: 500 });

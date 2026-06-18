@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-
+import { authorize, AuthUser } from "@/lib/api-auth";
 import { z } from "zod";
 
 export const dynamic = "force-dynamic";
@@ -26,6 +26,9 @@ const customerSchema = z.object({
 
 // GET /api/customers - List customers with pagination & filters
 export async function GET(request: NextRequest) {
+  const authResult = await authorize(request, "read", "customer");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "1");

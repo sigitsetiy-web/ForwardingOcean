@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
 import prisma from "@/lib/prisma";
 import { hasPermission } from "@/lib/rbac";
 import { Role } from "@prisma/client";
@@ -19,68 +18,63 @@ type Resource =
   | "settings"
   | "dashboard";
 
-interface AuthResult {
-  user: {
-    id: string;
-    email: string;
-    name: string;
-    role: Role;
-    branchId: string | null;
-  };
+export interface AuthUser {
+  id: string;
+  email: string;
+  name: string;
+  role: Role;
+  branchId: string | null;
 }
 
 /**
- * Verify the current user from the request session.
- * Returns the user object or null if not authenticated.
+ * Get authenticated user from request.
+ * Checks X-User-Id header or cookie for session.
+ * Returns user or null if not authenticated.
  */
-export async function getAuthUser(
-  request: NextRequest
-): Promise<AuthResult | null> {
+export async function getAuthUser(request: NextRequest): Promise<AuthUser | null> {
   try {
-    const supabase = createServerSupabaseClient();
-    const {
-      data: { user: supabaseUser },
-    } = await supabase.auth.getUser();
+    // Get user ID from header (set by client) or cookie
+    const userId = request.headers.get("x-user-id") || 
+                   request.cookies.get("fms_user_id")?.value;
 
-    if (!supabaseUser) return null;
+    if (!userId) return null;
 
-    const user = await prisma.user.findFirst({
-      where: {
-        OR: [
-          { supabaseUserId: supabaseUser.id },
-          { email: supabaseUser.email },
-        ],
-        isActive: true,
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        role: true,
-        branchId: true,
-      },
+    const user = await prisma.user.findUnique({
+      where: { id: userId, isActive: true },
+      select: { id: true, email: true, name: true, role: true, branchId: true },
     });
 
-    if (!user) return null;
-
-    return { user };
+    return user || null;
   } catch {
     return null;
   }
 }
 
 /**
- * Check if the authenticated user has permission to perform an action.
- * Returns a NextResponse error if not authorized, or null if authorized.
+ * Require authentication. Returns 401 if not authenticated.
  */
-export function checkPermission(
-  role: Role,
+export async function requireAuth(request: NextRequest): Promise<AuthUser | NextResponse> {
+  const user = await getAuthUser(request);
+  if (!user) {
+    return NextResponse.json(
+      { error: "Unauthorized. Silakan login terlebih dahulu." },
+      { status: 401 }
+    );
+  }
+  return user;
+}
+
+/**
+ * Require specific permission. Returns 403 if not authorized.
+ */
+export function requirePermission(
+  user: AuthUser,
   action: Action,
   resource: Resource
 ): NextResponse | null {
-  if (!hasPermission(role, action, resource)) {
+  if (!hasPermission(user.role, action, resource)) {
     return NextResponse.json(
-      { error: "Anda tidak memiliki akses untuk melakukan aksi ini" },
+      { error: `Anda tidak memiliki akses untuk ${action} ${resource}` },
       { status: 403 }
     );
   }
@@ -88,15 +82,33 @@ export function checkPermission(
 }
 
 /**
- * Apply branch filter for non-owner/admin users.
- * Returns the branchId filter or undefined for full access.
+ * Get branch filter for queries.
+ * Owner/Admin see all, others see only their branch.
  */
-export function getBranchFilter(
-  role: Role,
-  branchId: string | null
-): string | undefined {
-  if (role === "OWNER" || role === "ADMIN") {
-    return undefined; // Full access
+export function getBranchFilter(user: AuthUser): Record<string, string> | Record<string, never> {
+  if (user.role === "OWNER" || user.role === "ADMIN") {
+    return {}; // No filter — see all
   }
-  return branchId || undefined;
+  if (user.branchId) {
+    return { branchId: user.branchId };
+  }
+  return {};
+}
+
+/**
+ * Helper: check auth + permission in one call.
+ * Returns user if authorized, or NextResponse error.
+ */
+export async function authorize(
+  request: NextRequest,
+  action: Action,
+  resource: Resource
+): Promise<AuthUser | NextResponse> {
+  const authResult = await requireAuth(request);
+  if (authResult instanceof NextResponse) return authResult;
+
+  const permError = requirePermission(authResult, action, resource);
+  if (permError) return permError;
+
+  return authResult;
 }

@@ -1,24 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-
+import { authorize, getBranchFilter, AuthUser } from "@/lib/api-auth";
 import { generateJobOrderNumber } from "@/lib/job-number-generator";
 import { z } from "zod";
 
 export const dynamic = "force-dynamic";
 
 const createJobOrderSchema = z.object({
-
-
   customerId: z.string().min(1, "Customer wajib dipilih"),
-  customerName: z.string().optional(), // Nama customer dari Accurate
-  customerCode: z.string().optional(), // Kode customer dari Accurate
-  serviceType: z.enum([
-    "SEA_IMPORT",
-    "SEA_EXPORT",
-    "AIR_IMPORT",
-    "AIR_EXPORT",
-    "DOMESTIC",
-  ]),
+  customerName: z.string().optional(),
+  customerCode: z.string().optional(),
+  serviceType: z.enum(["SEA_IMPORT", "SEA_EXPORT", "AIR_IMPORT", "AIR_EXPORT", "DOMESTIC"]),
   branchId: z.string().min(1, "Cabang wajib dipilih"),
   quotationId: z.string().optional(),
   shipper: z.string().optional(),
@@ -42,8 +34,13 @@ const createJobOrderSchema = z.object({
   assignedTo: z.string().optional(),
 });
 
-// GET /api/job-orders - List with pagination & filters
+// GET /api/job-orders
 export async function GET(request: NextRequest) {
+  // Auth check
+  const authResult = await authorize(request, "read", "job_order");
+  if (authResult instanceof NextResponse) return authResult;
+  const user = authResult as AuthUser;
+
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "1");
@@ -53,32 +50,22 @@ export async function GET(request: NextRequest) {
     const serviceType = searchParams.get("serviceType") || "";
     const branchId = searchParams.get("branchId") || "";
     const customerId = searchParams.get("customerId") || "";
-    const startDate = searchParams.get("startDate") || "";
-    const endDate = searchParams.get("endDate") || "";
 
-    const where: Record<string, unknown> = {};
+    // Apply branch filter based on user role
+    const branchFilter = getBranchFilter(user);
+    const where: Record<string, unknown> = { ...branchFilter };
 
     if (search) {
       where.OR = [
         { number: { contains: search, mode: "insensitive" } },
         { customer: { name: { contains: search, mode: "insensitive" } } },
         { shipper: { contains: search, mode: "insensitive" } },
-        { consignee: { contains: search, mode: "insensitive" } },
       ];
     }
-
     if (status) where.status = status;
     if (serviceType) where.serviceType = serviceType;
     if (branchId) where.branchId = branchId;
     if (customerId) where.customerId = customerId;
-
-    if (startDate || endDate) {
-      where.createdAt = {};
-      if (startDate)
-        (where.createdAt as Record<string, unknown>).gte = new Date(startDate);
-      if (endDate)
-        (where.createdAt as Record<string, unknown>).lte = new Date(endDate);
-    }
 
     const [jobOrders, total] = await Promise.all([
       prisma.jobOrder.findMany({
@@ -95,62 +82,42 @@ export async function GET(request: NextRequest) {
       prisma.jobOrder.count({ where }),
     ]);
 
-    return NextResponse.json({
-      data: jobOrders,
-      total,
-      page,
-      pageSize,
-      totalPages: Math.ceil(total / pageSize),
-    });
+    return NextResponse.json({ data: jobOrders, total, page, pageSize, totalPages: Math.ceil(total / pageSize) });
   } catch (error) {
-    console.warn("Job Orders: Using mock data");
-    return NextResponse.json({
-      data: MOCK_JOB_ORDERS,
-      total: MOCK_JOB_ORDERS.length,
-      page: 1,
-      pageSize: 20,
-      totalPages: 1,
-    });
+    console.error("Error fetching job orders:", error);
+    return NextResponse.json({ data: [], total: 0, page: 1, pageSize: 20, totalPages: 0 });
   }
 }
 
-// POST /api/job-orders - Create new job order
+// POST /api/job-orders
 export async function POST(request: NextRequest) {
+  // Auth check
+  const authResult = await authorize(request, "create", "job_order");
+  if (authResult instanceof NextResponse) return authResult;
+
   try {
     const body = await request.json();
     const validated = createJobOrderSchema.parse(body);
 
-    // Get branch code for number generation
     const branch = await prisma.branch.findUnique({
       where: { id: validated.branchId },
       select: { code: true },
     });
 
     if (!branch) {
-      return NextResponse.json(
-        { error: "Cabang tidak ditemukan" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Cabang tidak ditemukan" }, { status: 400 });
     }
 
-    // Resolve customer: find or create from Accurate Online ID
+    // Resolve customer (from Accurate ID or local)
     let localCustomerId = validated.customerId;
-    
-    // Check if customerId is an Accurate Online ID (numeric)
     const isAoId = /^\d+$/.test(validated.customerId);
     if (isAoId) {
-      // Find existing customer linked to this AO ID
-      let customer = await prisma.customer.findFirst({
-        where: { aoCustomerId: validated.customerId },
-      });
-
+      let customer = await prisma.customer.findFirst({ where: { aoCustomerId: validated.customerId } });
       if (!customer) {
-        // Create new customer from Accurate data
-        const code = validated.customerCode || `AO-${validated.customerId}`;
         customer = await prisma.customer.create({
           data: {
-            code,
-            name: validated.customerName || "Customer AO",
+            code: validated.customerCode || `AO-${validated.customerId}`,
+            name: validated.customerName || "Customer",
             segment: "IMPORTER",
             leadStatus: "CUSTOMER",
             aoCustomerId: validated.customerId,
@@ -160,13 +127,8 @@ export async function POST(request: NextRequest) {
       localCustomerId = customer.id;
     }
 
-    // Generate JO number
-    const joNumber = await generateJobOrderNumber(
-      branch.code,
-      validated.serviceType
-    );
+    const joNumber = await generateJobOrderNumber(branch.code, validated.serviceType);
 
-    // Create job order with milestones
     const jobOrder = await prisma.jobOrder.create({
       data: {
         number: joNumber,
@@ -193,7 +155,6 @@ export async function POST(request: NextRequest) {
         createdById: validated.createdById,
         assignedTo: validated.assignedTo,
         status: "DRAFT",
-        // Create default milestones
         milestones: {
           create: [
             { type: "ORDER_CONFIRMED", status: "PENDING" },
@@ -208,13 +169,8 @@ export async function POST(request: NextRequest) {
             { type: "JOB_CLOSED", status: "PENDING" },
           ],
         },
-        // Log activity
         activities: {
-          create: {
-            action: "CREATED",
-            description: `Job Order ${joNumber} dibuat`,
-            userId: validated.createdById,
-          },
+          create: { action: "CREATED", description: `Job Order ${joNumber} dibuat`, userId: validated.createdById },
         },
       },
       include: {
@@ -227,15 +183,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ data: jobOrder }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: "Validation error", details: error.issues },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Validation error", details: error.issues }, { status: 400 });
     }
     console.error("Error creating job order:", error);
-    return NextResponse.json(
-      { error: "Failed to create job order" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to create job order" }, { status: 500 });
   }
 }

@@ -2,18 +2,9 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import {
   Select,
   SelectContent,
@@ -21,16 +12,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Search, Filter } from "lucide-react";
+import { Plus, Search, Download, Filter } from "lucide-react";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { DataTable, DataColumn } from "@/components/shared/data-table";
+import { StatusPipeline, JOB_ORDER_PIPELINE } from "@/components/shared/status-pipeline";
 
 const statusColors: Record<string, string> = {
-  DRAFT: "bg-gray-100 text-gray-800",
-  CONFIRMED: "bg-blue-100 text-blue-800",
-  IN_PROGRESS: "bg-amber-100 text-amber-800",
-  COMPLETED: "bg-green-100 text-green-800",
-  INVOICED: "bg-purple-100 text-purple-800",
-  CLOSED: "bg-slate-100 text-slate-800",
+  DRAFT: "bg-gray-100 text-gray-800 border-gray-200",
+  CONFIRMED: "bg-blue-50 text-blue-700 border-blue-200",
+  IN_PROGRESS: "bg-amber-50 text-amber-700 border-amber-200",
+  COMPLETED: "bg-green-50 text-green-700 border-green-200",
+  INVOICED: "bg-purple-50 text-purple-700 border-purple-200",
+  CLOSED: "bg-slate-50 text-slate-700 border-slate-200",
 };
 
 const serviceTypeLabels: Record<string, string> = {
@@ -63,193 +57,202 @@ export default function JobOrdersPage() {
     },
   });
 
+  const columns: DataColumn[] = [
+    {
+      key: "number",
+      label: "No. JO",
+      sortable: true,
+      width: "180px",
+      render: (row) => (
+        <Link
+          href={`/job-orders/${row.id}`}
+          className="font-semibold text-[#0070F2] hover:underline"
+        >
+          {row.number as string}
+        </Link>
+      ),
+    },
+    {
+      key: "customer",
+      label: "Pelanggan",
+      sortable: true,
+      render: (row) => (
+        <span className="font-medium">
+          {(row.customer as Record<string, string>)?.name || "-"}
+        </span>
+      ),
+    },
+    {
+      key: "serviceType",
+      label: "Jenis",
+      width: "120px",
+      render: (row) => (
+        <Badge variant="outline" className="text-[11px] font-normal">
+          {serviceTypeLabels[row.serviceType as string] || String(row.serviceType)}
+        </Badge>
+      ),
+    },
+    {
+      key: "branch",
+      label: "Cabang",
+      width: "100px",
+      render: (row) => (
+        <span className="text-[#6A6D70]">
+          {(row.branch as Record<string, string>)?.code || "-"}
+        </span>
+      ),
+    },
+    {
+      key: "status",
+      label: "Status",
+      sortable: true,
+      width: "130px",
+      render: (row) => (
+        <Badge
+          className={cn(
+            "text-[11px] border font-medium",
+            statusColors[row.status as string] || "bg-gray-100"
+          )}
+          variant="secondary"
+        >
+          {(row.status as string).replace("_", " ")}
+        </Badge>
+      ),
+    },
+    {
+      key: "etd",
+      label: "ETD",
+      width: "100px",
+      sortable: true,
+      render: (row) =>
+        row.etd ? (
+          <span className="text-[12px] tabular-nums">
+            {new Date(row.etd as string).toLocaleDateString("id-ID", { day: "2-digit", month: "short" })}
+          </span>
+        ) : (
+          <span className="text-[#D1D2D4]">—</span>
+        ),
+    },
+    {
+      key: "eta",
+      label: "ETA",
+      width: "100px",
+      sortable: true,
+      render: (row) =>
+        row.eta ? (
+          <span className="text-[12px] tabular-nums">
+            {new Date(row.eta as string).toLocaleDateString("id-ID", { day: "2-digit", month: "short" })}
+          </span>
+        ) : (
+          <span className="text-[#D1D2D4]">—</span>
+        ),
+    },
+    {
+      key: "grossProfit",
+      label: "Profit",
+      align: "right",
+      width: "130px",
+      sortable: true,
+      render: (row) => {
+        const profit = Number(row.grossProfit || 0);
+        if (profit === 0) return <span className="text-[#D1D2D4]">—</span>;
+        return (
+          <span className={profit > 0 ? "text-green-700 font-medium" : "text-red-600 font-medium"}>
+            {new Intl.NumberFormat("id-ID", {
+              style: "currency",
+              currency: "IDR",
+              minimumFractionDigits: 0,
+              notation: "compact",
+            }).format(profit)}
+          </span>
+        );
+      },
+    },
+  ];
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
+    <div className="space-y-5">
+      {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Job Orders</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-xl font-bold" style={{ color: "#32363A" }}>Job Orders</h1>
+          <p className="text-[13px]" style={{ color: "#6A6D70" }}>
             Kelola semua job order pengiriman
           </p>
         </div>
-        <Link href="/job-orders/new">
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Buat Job Order
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" className="text-[12px] h-8">
+            <Download className="h-3.5 w-3.5 mr-1.5" />
+            Export
           </Button>
-        </Link>
+          <Link href="/job-orders/new">
+            <Button size="sm" className="text-[12px] h-8" style={{ background: "#0070F2" }}>
+              <Plus className="h-3.5 w-3.5 mr-1.5" />
+              Buat Job Order
+            </Button>
+          </Link>
+        </div>
       </div>
 
-      {/* Filters */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Cari nomor JO, pelanggan..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <Select value={statusFilter || "all"} onValueChange={(v) => setStatusFilter(v === "all" ? "" : v)}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Semua Status</SelectItem>
-                <SelectItem value="DRAFT">Draft</SelectItem>
-                <SelectItem value="CONFIRMED">Confirmed</SelectItem>
-                <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
-                <SelectItem value="COMPLETED">Completed</SelectItem>
-                <SelectItem value="INVOICED">Invoiced</SelectItem>
-                <SelectItem value="CLOSED">Closed</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={serviceTypeFilter || "all"} onValueChange={(v) => setServiceTypeFilter(v === "all" ? "" : v)}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Jenis Layanan" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Semua Jenis</SelectItem>
-                <SelectItem value="SEA_IMPORT">Sea Import</SelectItem>
-                <SelectItem value="SEA_EXPORT">Sea Export</SelectItem>
-                <SelectItem value="AIR_IMPORT">Air Import</SelectItem>
-                <SelectItem value="AIR_EXPORT">Air Export</SelectItem>
-                <SelectItem value="DOMESTIC">Domestik</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Table */}
-      <Card>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>No. JO</TableHead>
-                <TableHead>Pelanggan</TableHead>
-                <TableHead>Jenis</TableHead>
-                <TableHead>Cabang</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>ETD</TableHead>
-                <TableHead>ETA</TableHead>
-                <TableHead className="text-right">Profit</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8">
-                    Memuat data...
-                  </TableCell>
-                </TableRow>
-              ) : data?.data?.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
-                    Belum ada job order
-                  </TableCell>
-                </TableRow>
-              ) : (
-                data?.data?.map((jo: Record<string, unknown>) => (
-                  <TableRow key={jo.id as string}>
-                    <TableCell>
-                      <Link
-                        href={`/job-orders/${jo.id}`}
-                        className="font-medium text-primary hover:underline"
-                      >
-                        {jo.number as string}
-                      </Link>
-                    </TableCell>
-                    <TableCell>
-                      {(jo.customer as Record<string, string>)?.name}
-                    </TableCell>
-                    <TableCell>
-                      {serviceTypeLabels[jo.serviceType as string] || String(jo.serviceType)}
-                    </TableCell>
-                    <TableCell>
-                      {(jo.branch as Record<string, string>)?.name}
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        className={
-                          statusColors[jo.status as string] || "bg-gray-100"
-                        }
-                        variant="secondary"
-                      >
-                        {(jo.status as string).replace("_", " ")}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {jo.etd
-                        ? new Date(jo.etd as string).toLocaleDateString("id-ID")
-                        : "-"}
-                    </TableCell>
-                    <TableCell>
-                      {jo.eta
-                        ? new Date(jo.eta as string).toLocaleDateString("id-ID")
-                        : "-"}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {Number(jo.grossProfit || 0) > 0 ? (
-                        <span className="text-green-600 font-medium">
-                          {new Intl.NumberFormat("id-ID", {
-                            style: "currency",
-                            currency: "IDR",
-                            minimumFractionDigits: 0,
-                          }).format(Number(jo.grossProfit))}
-                        </span>
-                      ) : Number(jo.grossProfit || 0) < 0 ? (
-                        <span className="text-red-600 font-medium">
-                          {new Intl.NumberFormat("id-ID", {
-                            style: "currency",
-                            currency: "IDR",
-                            minimumFractionDigits: 0,
-                          }).format(Number(jo.grossProfit))}
-                        </span>
-                      ) : (
-                        <span className="text-muted-foreground">-</span>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-
-      {/* Pagination */}
-      {data?.totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
-            Menampilkan {(page - 1) * 20 + 1} - {Math.min(page * 20, data.total)} dari{" "}
-            {data.total} data
-          </p>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={page === 1}
-              onClick={() => setPage(page - 1)}
-            >
-              Sebelumnya
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={page === data.totalPages}
-              onClick={() => setPage(page + 1)}
-            >
-              Selanjutnya
-            </Button>
-          </div>
+      {/* Filters Bar (SAP-style) */}
+      <div
+        className="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-lg border"
+        style={{ background: "#FFFFFF", borderColor: "#E5E7EB" }}
+      >
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#6A6D70]" />
+          <Input
+            placeholder="Cari nomor JO, pelanggan..."
+            value={search}
+            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            className="pl-9 h-8 text-[13px] border-[#D1D2D4]"
+          />
         </div>
-      )}
+        <div className="flex items-center gap-2">
+          <Select value={statusFilter || "all"} onValueChange={(v) => { setStatusFilter(v === "all" ? "" : v); setPage(1); }}>
+            <SelectTrigger className="w-[140px] h-8 text-[12px] border-[#D1D2D4]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Semua Status</SelectItem>
+              <SelectItem value="DRAFT">Draft</SelectItem>
+              <SelectItem value="CONFIRMED">Confirmed</SelectItem>
+              <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
+              <SelectItem value="COMPLETED">Completed</SelectItem>
+              <SelectItem value="INVOICED">Invoiced</SelectItem>
+              <SelectItem value="CLOSED">Closed</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={serviceTypeFilter || "all"} onValueChange={(v) => { setServiceTypeFilter(v === "all" ? "" : v); setPage(1); }}>
+            <SelectTrigger className="w-[140px] h-8 text-[12px] border-[#D1D2D4]">
+              <SelectValue placeholder="Jenis" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Semua Jenis</SelectItem>
+              <SelectItem value="SEA_IMPORT">Sea Import</SelectItem>
+              <SelectItem value="SEA_EXPORT">Sea Export</SelectItem>
+              <SelectItem value="AIR_IMPORT">Air Import</SelectItem>
+              <SelectItem value="AIR_EXPORT">Air Export</SelectItem>
+              <SelectItem value="DOMESTIC">Domestik</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Data Table */}
+      <DataTable
+        columns={columns}
+        data={data?.data || []}
+        total={data?.total || 0}
+        page={page}
+        pageSize={20}
+        totalPages={data?.totalPages || 1}
+        isLoading={isLoading}
+        emptyMessage="Belum ada job order"
+        onPageChange={setPage}
+        selectable
+        compact
+      />
     </div>
   );
 }

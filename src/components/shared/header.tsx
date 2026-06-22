@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { Badge } from "@/components/ui/badge";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Breadcrumb } from "./breadcrumb";
 
 export function Header() {
   const { user } = useCurrentUser();
@@ -81,17 +82,15 @@ export function Header() {
   };
 
   return (
-    <header className="h-16 border-b border-border bg-white flex items-center justify-between px-6 shadow-sm">
-      {/* Breadcrumb area */}
-      <div className="flex items-center gap-2">
-        <h1 className="text-lg font-semibold text-[hsl(210,70%,28%)]">
-          Forwarding Management System
-        </h1>
+    <header className="h-14 border-b bg-white flex items-center justify-between px-6" style={{ borderColor: "#D1D2D4" }}>
+      {/* Left - Breadcrumb */}
+      <div className="flex items-center gap-3">
+        <Breadcrumb />
       </div>
 
       {/* Center - Brand */}
-      <div className="hidden md:flex items-center">
-        <span className="text-sm font-medium" style={{ color: "#6A6D70" }}>Wasilah Digital Sistem</span>
+      <div className="hidden lg:flex items-center">
+        <span className="text-[12px] font-medium" style={{ color: "#6A6D70" }}>Wasilah Digital Sistem</span>
       </div>
 
       {/* Right side */}

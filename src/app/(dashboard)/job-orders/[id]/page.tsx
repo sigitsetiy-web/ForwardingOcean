@@ -28,6 +28,7 @@ import { DocumentUploadDialog } from "@/components/document/upload-dialog";
 import { StatusUpdateDialog } from "@/components/job-order/status-update-dialog";
 import { FinancialDialog } from "@/components/job-order/financial-dialog";
 import { CustomsClearanceDialog } from "@/components/job-order/customs-clearance-dialog";
+import { StatusPipeline, JOB_ORDER_PIPELINE } from "@/components/shared/status-pipeline";
 
 const statusColors: Record<string, string> = {
   DRAFT: "bg-gray-100 text-gray-800",
@@ -118,42 +119,14 @@ export default function JobOrderDetailPage() {
         </div>
       </div>
 
-      {/* Milestone Progress */}
+      {/* Status Pipeline (Odoo-style) */}
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Progress</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center gap-1 overflow-x-auto pb-2">
-            {jo.milestones?.map(
-              (milestone: Record<string, unknown>, index: number) => (
-                <div key={milestone.id as string} className="flex items-center">
-                  <div className="flex flex-col items-center min-w-[100px]">
-                    {milestone.status === "DONE" ? (
-                      <CheckCircle className="h-6 w-6 text-green-600" />
-                    ) : milestone.status === "IN_PROGRESS" ? (
-                      <Clock className="h-6 w-6 text-amber-600" />
-                    ) : (
-                      <Circle className="h-6 w-6 text-gray-300" />
-                    )}
-                    <span className="text-xs text-center mt-1 max-w-[90px]">
-                      {milestoneLabels[milestone.type as string] ||
-                        String(milestone.type)}
-                    </span>
-                  </div>
-                  {index < jo.milestones.length - 1 && (
-                    <div
-                      className={`h-0.5 w-8 ${
-                        milestone.status === "DONE"
-                          ? "bg-green-600"
-                          : "bg-gray-200"
-                      }`}
-                    />
-                  )}
-                </div>
-              )
-            )}
-          </div>
+        <CardContent className="py-5 px-6">
+          <StatusPipeline
+            steps={JOB_ORDER_PIPELINE}
+            currentStep={jo.status}
+            colorScheme="blue"
+          />
         </CardContent>
       </Card>
 

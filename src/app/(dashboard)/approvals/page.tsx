@@ -89,37 +89,30 @@ export default function ApprovalsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <CheckCircle className="h-6 w-6" />
-          Approval Center
-        </h1>
-        <p className="text-muted-foreground">Review dan setujui dokumen yang memerlukan persetujuan</p>
+        <h1 className="text-xl font-bold" style={{ color: "#32363A" }}>Approval Center</h1>
+        <p className="text-[13px]" style={{ color: "#6A6D70" }}>Review dan setujui dokumen yang memerlukan persetujuan</p>
       </div>
 
       {/* Filters */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]"><SelectValue placeholder="Status" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="PENDING">Pending</SelectItem>
-                <SelectItem value="APPROVED">Approved</SelectItem>
-                <SelectItem value="REJECTED">Rejected</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={entityTypeFilter || "all"} onValueChange={(v) => setEntityTypeFilter(v === "all" ? "" : v)}>
-              <SelectTrigger className="w-[180px]"><SelectValue placeholder="Tipe" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Semua Tipe</SelectItem>
-                <SelectItem value="QUOTATION">Quotation</SelectItem>
-                <SelectItem value="JOB_ORDER">Job Order</SelectItem>
-                <SelectItem value="DOCUMENT">Dokumen</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="flex items-center gap-3 p-3 rounded-lg border" style={{ background: "#FFFFFF", borderColor: "#E5E7EB" }}>
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="w-[140px] h-8 text-[12px] border-[#D1D2D4]"><SelectValue placeholder="Status" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="PENDING">Pending</SelectItem>
+            <SelectItem value="APPROVED">Approved</SelectItem>
+            <SelectItem value="REJECTED">Rejected</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={entityTypeFilter || "all"} onValueChange={(v) => setEntityTypeFilter(v === "all" ? "" : v)}>
+          <SelectTrigger className="w-[140px] h-8 text-[12px] border-[#D1D2D4]"><SelectValue placeholder="Tipe" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Semua Tipe</SelectItem>
+            <SelectItem value="QUOTATION">Quotation</SelectItem>
+            <SelectItem value="JOB_ORDER">Job Order</SelectItem>
+            <SelectItem value="DOCUMENT">Dokumen</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
       {/* List */}
       {isLoading ? (

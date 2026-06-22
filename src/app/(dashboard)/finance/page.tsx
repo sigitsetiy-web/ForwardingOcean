@@ -74,8 +74,8 @@ export default function FinancePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Keuangan</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-xl font-bold" style={{ color: "#32363A" }}>Keuangan</h1>
+        <p className="text-[13px]" style={{ color: "#6A6D70" }}>
           Kelola penerimaan, pembayaran, dan transaksi keuangan
         </p>
       </div>

@@ -15,10 +15,10 @@ import {
 import { Truck, MapPin, Clock, Camera } from "lucide-react";
 
 const statusColors: Record<string, string> = {
-  ASSIGNED: "bg-blue-100 text-blue-800",
-  DEPARTED: "bg-amber-100 text-amber-800",
-  DELIVERED: "bg-green-100 text-green-800",
-  POD_RECEIVED: "bg-emerald-100 text-emerald-800",
+  ASSIGNED: "bg-blue-50 text-blue-700 border-blue-200",
+  DEPARTED: "bg-amber-50 text-amber-700 border-amber-200",
+  DELIVERED: "bg-green-50 text-green-700 border-green-200",
+  POD_RECEIVED: "bg-emerald-50 text-emerald-700 border-emerald-200",
 };
 
 const statusLabels: Record<string, string> = {
@@ -45,35 +45,28 @@ export default function TruckingPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <Truck className="h-6 w-6" />
-            Trucking & Operasional
-          </h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-xl font-bold" style={{ color: "#32363A" }}>Trucking & Operasional</h1>
+          <p className="text-[13px]" style={{ color: "#6A6D70" }}>
             Pantau status pengiriman darat dan penugasan kendaraan
           </p>
         </div>
       </div>
 
       {/* Filters */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex gap-4">
-            <Select value={statusFilter || "all"} onValueChange={(v) => setStatusFilter(v === "all" ? "" : v)}>
-              <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder="Semua Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Semua Status</SelectItem>
-                <SelectItem value="ASSIGNED">Ditugaskan</SelectItem>
-                <SelectItem value="DEPARTED">Berangkat</SelectItem>
-                <SelectItem value="DELIVERED">Terkirim</SelectItem>
-                <SelectItem value="POD_RECEIVED">POD Diterima</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="flex items-center gap-3 p-3 rounded-lg border" style={{ background: "#FFFFFF", borderColor: "#E5E7EB" }}>
+        <Select value={statusFilter || "all"} onValueChange={(v) => setStatusFilter(v === "all" ? "" : v)}>
+          <SelectTrigger className="w-[160px] h-8 text-[12px] border-[#D1D2D4]">
+            <SelectValue placeholder="Semua Status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Semua Status</SelectItem>
+            <SelectItem value="ASSIGNED">Ditugaskan</SelectItem>
+            <SelectItem value="DEPARTED">Berangkat</SelectItem>
+            <SelectItem value="DELIVERED">Terkirim</SelectItem>
+            <SelectItem value="POD_RECEIVED">POD Diterima</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
       {/* Assignments */}
       {isLoading ? (

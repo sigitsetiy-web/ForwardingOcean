@@ -63,10 +63,10 @@ export default function DashboardPage() {
     <div className="space-y-6">
       {/* Welcome */}
       <div>
-        <h1 className="text-2xl font-bold">
+        <h1 className="text-xl font-bold" style={{ color: "#32363A" }}>
           Selamat datang, {user?.name}
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-[13px]" style={{ color: "#6A6D70" }}>
           Berikut ringkasan aktivitas hari ini.
         </p>
       </div>

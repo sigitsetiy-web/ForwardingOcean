@@ -63,11 +63,8 @@ export default function ReportsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <BarChart3 className="h-6 w-6" />
-            Laporan Profitabilitas
-          </h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-xl font-bold" style={{ color: "#32363A" }}>Laporan Profitabilitas</h1>
+          <p className="text-[13px]" style={{ color: "#6A6D70" }}>
             Analisis pendapatan, biaya, dan profit per job order
           </p>
         </div>

@@ -6,29 +6,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Search, RefreshCw, Globe } from "lucide-react";
+import { DataTable, DataColumn } from "@/components/shared/data-table";
 
 export default function CustomersPage() {
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [page, setPage] = useState(1);
 
-  // Fetch customers directly from Accurate Online
   const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
     queryKey: ["ao-customers", search, page],
     queryFn: async () => {
-      const params = new URLSearchParams({
-        page: String(page),
-        pageSize: "20",
-      });
+      const params = new URLSearchParams({ page: String(page), pageSize: "20" });
       if (search) params.set("keyword", search);
       const res = await fetch(`/api/accurate-online/customers?${params}`);
       if (!res.ok) {
@@ -44,12 +33,56 @@ export default function CustomersPage() {
     setPage(1);
   };
 
+  const columns: DataColumn[] = [
+    {
+      key: "customerNo",
+      label: "Kode",
+      width: "100px",
+      render: (row) => (
+        <Badge variant="outline" className="font-mono text-[10px]">
+          {(row.customerNo as string) || "-"}
+        </Badge>
+      ),
+    },
+    {
+      key: "name",
+      label: "Nama",
+      sortable: true,
+      render: (row) => <span className="font-medium">{row.name as string}</span>,
+    },
+    {
+      key: "mobilePhone",
+      label: "Telepon",
+      width: "130px",
+      render: (row) => <span className="text-[12px]">{(row.mobilePhone as string) || "-"}</span>,
+    },
+    {
+      key: "email",
+      label: "Email",
+      width: "180px",
+      render: (row) => <span className="text-[12px]">{(row.email as string) || "-"}</span>,
+    },
+    {
+      key: "npwpNo",
+      label: "NPWP",
+      width: "150px",
+      render: (row) => <span className="font-mono text-[11px]">{(row.npwpNo as string) || "-"}</span>,
+    },
+    {
+      key: "billStreet",
+      label: "Alamat",
+      render: (row) => (
+        <span className="text-[12px] line-clamp-1">{(row.billStreet as string) || "-"}</span>
+      ),
+    },
+  ];
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Pelanggan</h1>
-          <p className="text-muted-foreground flex items-center gap-1">
+          <h1 className="text-xl font-bold" style={{ color: "#32363A" }}>Pelanggan</h1>
+          <p className="text-[13px] flex items-center gap-1" style={{ color: "#6A6D70" }}>
             <Globe className="h-3.5 w-3.5" />
             Data pelanggan dari Accurate Online
           </p>
@@ -57,128 +90,56 @@ export default function CustomersPage() {
         <Button
           variant="outline"
           size="sm"
+          className="text-[12px] h-8"
           onClick={() => refetch()}
           disabled={isFetching}
         >
-          <RefreshCw className={`h-4 w-4 mr-2 ${isFetching ? "animate-spin" : ""}`} />
+          <RefreshCw className={`h-3.5 w-3.5 mr-1.5 ${isFetching ? "animate-spin" : ""}`} />
           Refresh
         </Button>
       </div>
 
       {/* Search */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Cari nama pelanggan..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                className="pl-10"
-              />
-            </div>
-            <Button onClick={handleSearch}>
-              <Search className="h-4 w-4 mr-2" />
-              Cari
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="flex items-center gap-3 p-3 rounded-lg border" style={{ background: "#FFFFFF", borderColor: "#E5E7EB" }}>
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#6A6D70]" />
+          <Input
+            placeholder="Cari nama pelanggan..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            className="pl-9 h-8 text-[13px] border-[#D1D2D4]"
+          />
+        </div>
+        <Button onClick={handleSearch} size="sm" className="h-8 text-[12px]" style={{ background: "#0070F2" }}>
+          <Search className="h-3.5 w-3.5 mr-1.5" />
+          Cari
+        </Button>
+      </div>
 
       {/* Error */}
       {isError && (
-        <Card className="border-red-200 bg-red-50">
-          <CardContent className="pt-6">
-            <p className="text-sm text-red-800">
-              {(error as Error).message}. Pastikan Accurate Online sudah dikonfigurasi di{" "}
-              <a href="/settings/accurate-online" className="underline font-medium">
-                Pengaturan
-              </a>.
-            </p>
-          </CardContent>
-        </Card>
+        <div className="rounded-lg border border-red-200 bg-red-50 p-3">
+          <p className="text-[13px] text-red-800">
+            {(error as Error).message}. Pastikan Accurate Online sudah dikonfigurasi di{" "}
+            <a href="/settings/accurate-online" className="underline font-medium">Pengaturan</a>.
+          </p>
+        </div>
       )}
 
-      {/* Table */}
-      <Card>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Kode</TableHead>
-                <TableHead>Nama</TableHead>
-                <TableHead>Telepon</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>NPWP</TableHead>
-                <TableHead>Alamat</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {isLoading ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8">
-                    <RefreshCw className="h-5 w-5 animate-spin mx-auto mb-2 text-muted-foreground" />
-                    <p className="text-sm text-muted-foreground">Mengambil data dari Accurate Online...</p>
-                  </TableCell>
-                </TableRow>
-              ) : !data?.data || data.data.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
-                    {isError ? "Gagal mengambil data" : "Tidak ada data pelanggan"}
-                  </TableCell>
-                </TableRow>
-              ) : (
-                data.data.map((customer: Record<string, unknown>) => (
-                  <TableRow key={String(customer.id)}>
-                    <TableCell className="font-mono text-sm">
-                      <Badge variant="outline">{(customer.customerNo as string) || "-"}</Badge>
-                    </TableCell>
-                    <TableCell className="font-medium">
-                      {customer.name as string}
-                    </TableCell>
-                    <TableCell>{(customer.mobilePhone as string) || "-"}</TableCell>
-                    <TableCell>{(customer.email as string) || "-"}</TableCell>
-                    <TableCell className="text-xs">{(customer.npwpNo as string) || "-"}</TableCell>
-                    <TableCell className="text-sm max-w-[200px] truncate">
-                      {(customer.billStreet as string) || "-"}
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-
-      {/* Pagination */}
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
-          {data?.total ? `Total: ${data.total} pelanggan` : ""}
-        </p>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={page === 1}
-            onClick={() => setPage(page - 1)}
-          >
-            Sebelumnya
-          </Button>
-          <span className="text-sm text-muted-foreground flex items-center px-2">
-            Hal. {page}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={!data?.data || data.data.length < 20}
-            onClick={() => setPage(page + 1)}
-          >
-            Selanjutnya
-          </Button>
-        </div>
-      </div>
+      {/* Data Table */}
+      <DataTable
+        columns={columns}
+        data={data?.data || []}
+        total={data?.total || 0}
+        page={page}
+        pageSize={20}
+        totalPages={Math.ceil((data?.total || 0) / 20) || 1}
+        isLoading={isLoading}
+        emptyMessage={isError ? "Gagal mengambil data" : "Tidak ada data pelanggan"}
+        onPageChange={setPage}
+        compact
+      />
     </div>
   );
 }

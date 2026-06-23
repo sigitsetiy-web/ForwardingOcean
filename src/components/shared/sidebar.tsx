@@ -48,6 +48,7 @@ function getGroupedMenu(role: Role): MenuGroup[] {
     items: [
       { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, resource: "dashboard" },
       { label: "Papan Control", href: "/control-center", icon: LayoutGrid, resource: "dashboard" },
+      { label: "Chat", href: "/chat", icon: MessageCircle, resource: "dashboard" },
     ],
   });
 

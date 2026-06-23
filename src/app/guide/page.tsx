@@ -35,7 +35,7 @@ export default function GuidePage() {
             <h2 className="text-2xl text-white/80 mb-6">KayOcean Forwarding Management System</h2>
             <div className="h-1 w-24 mx-auto rounded-full mb-6" style={{ background: "#F59E0B" }} />
             <p className="text-white/60 text-sm">Standar Operasional Prosedur & Panduan Pengguna</p>
-            <p className="text-white/40 text-xs mt-4">Versi 1.0 — Mei 2026</p>
+            <p className="text-white/40 text-xs mt-4">Versi 2.0 — Juni 2026</p>
             <p className="text-white/40 text-xs">Dibuat oleh: Wasilah Digital Sistem</p>
           </div>
         </div>
@@ -46,17 +46,18 @@ export default function GuidePage() {
             {[
               { num: "1", title: "Pendahuluan & Akses Sistem", icon: BookOpen, id: "pendahuluan" },
               { num: "2", title: "Alur Bisnis Utama", icon: Ship, id: "alur-bisnis" },
-              { num: "3", title: "Sales Quotation", icon: FileText, id: "quotation" },
-              { num: "4", title: "Sales Order", icon: FileText, id: "sales-order" },
-              { num: "5", title: "Job Order", icon: Package, id: "job-order" },
-              { num: "6", title: "Custom Clearance", icon: Shield, id: "customs" },
-              { num: "7", title: "Trucking", icon: Truck, id: "trucking" },
-              { num: "8", title: "Invoice (AR)", icon: DollarSign, id: "invoice-ar" },
-              { num: "9", title: "Vendor Invoice (AP)", icon: DollarSign, id: "invoice-ap" },
-              { num: "10", title: "Approval", icon: CheckCircle, id: "approval" },
-              { num: "11", title: "Chat & Komunikasi", icon: MessageCircle, id: "chat" },
-              { num: "12", title: "Laporan & Dashboard", icon: BarChart3, id: "laporan" },
-              { num: "13", title: "Peran & Hak Akses", icon: Users, id: "peran" },
+              { num: "3", title: "Dashboard & Widget", icon: BarChart3, id: "dashboard" },
+              { num: "4", title: "Sales Quotation", icon: FileText, id: "quotation" },
+              { num: "5", title: "Sales Order", icon: FileText, id: "sales-order" },
+              { num: "6", title: "Job Order", icon: Package, id: "job-order" },
+              { num: "7", title: "Custom Clearance", icon: Shield, id: "customs" },
+              { num: "8", title: "Trucking", icon: Truck, id: "trucking" },
+              { num: "9", title: "Invoice (AR)", icon: DollarSign, id: "invoice-ar" },
+              { num: "10", title: "Vendor Invoice (AP)", icon: DollarSign, id: "invoice-ap" },
+              { num: "11", title: "Approval", icon: CheckCircle, id: "approval" },
+              { num: "12", title: "Chat & Komunikasi", icon: MessageCircle, id: "chat" },
+              { num: "13", title: "Laporan & Grafik", icon: BarChart3, id: "laporan" },
+              { num: "14", title: "Peran & Hak Akses", icon: Users, id: "peran" },
             ].map((item) => (
               <a key={item.num} href={`#${item.id}`} className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors">
                 <div className="h-8 w-8 rounded-lg flex items-center justify-center" style={{ background: "#E8F0FE" }}>
@@ -101,8 +102,57 @@ export default function GuidePage() {
           <StatusFlow statuses={["DRAFT", "CONFIRMED", "IN PROGRESS", "COMPLETED", "INVOICED", "CLOSED"]} colors={["#6A6D70", "#0070F2", "#E9730C", "#107E3E", "#6B2FA0", "#32363A"]} />
         </Section>
 
-        {/* Section 3 - Quotation */}
-        <Section id="quotation" title="3. Sales Quotation" color="#0070F2" pageBreak>
+        {/* Section 3 - Dashboard */}
+        <Section id="dashboard" title="3. Dashboard & Widget" color="#6B2FA0" pageBreak>
+          <InfoBox color="#6B2FA0" title="Dashboard Personal">
+            Setiap user memiliki dashboard sendiri yang bisa dikustomisasi. Tambahkan widget sesuai kebutuhan kerja Anda.
+          </InfoBox>
+
+          <h4 className="font-bold mt-6 mb-3" style={{ color: "#003B62" }}>Cara Kustomisasi Dashboard:</h4>
+          <StepList steps={[
+            "Buka menu Dashboard (halaman utama setelah login)",
+            "Klik tombol \"+ Tambah Widget\" di pojok kanan atas",
+            "Panel widget akan muncul — pilih widget yang ingin ditampilkan",
+            "Widget yang aktif ditandai ✓ biru — klik lagi untuk menonaktifkan",
+            "Untuk menghapus widget: hover di widget → klik icon X di sudut kanan atas",
+            "Klik \"Reset Default\" untuk mengembalikan ke layout default sesuai role Anda",
+            "Preferensi widget tersimpan otomatis per user",
+          ]} />
+
+          <h4 className="font-bold mt-6 mb-3" style={{ color: "#003B62" }}>Widget yang Tersedia:</h4>
+          <div className="grid grid-cols-2 gap-3 mt-3">
+            <div className="p-3 rounded-lg" style={{ background: "#F5F8FF" }}>
+              <p className="text-xs font-bold" style={{ color: "#0070F2" }}>📊 KPI Cards</p>
+              <p className="text-[11px] mt-1" style={{ color: "#6A6D70" }}>JO Aktif, Revenue, Profit Margin, Pending Approval, Total Customer, Outstanding AR</p>
+            </div>
+            <div className="p-3 rounded-lg" style={{ background: "#F0FDF4" }}>
+              <p className="text-xs font-bold" style={{ color: "#107E3E" }}>📈 Grafik & Chart</p>
+              <p className="text-[11px] mt-1" style={{ color: "#6A6D70" }}>Revenue Bulanan, Trend Profit, Distribusi Layanan, Perbandingan Cabang, Top Customer, Status JO</p>
+            </div>
+            <div className="p-3 rounded-lg" style={{ background: "#FFF8F0" }}>
+              <p className="text-xs font-bold" style={{ color: "#E9730C" }}>📋 List Data</p>
+              <p className="text-[11px] mt-1" style={{ color: "#6A6D70" }}>JO Terbaru, ETA Mendatang, Ringkasan Cabang</p>
+            </div>
+            <div className="p-3 rounded-lg" style={{ background: "#FEF2F2" }}>
+              <p className="text-xs font-bold" style={{ color: "#BB0000" }}>⚠️ Alert</p>
+              <p className="text-[11px] mt-1" style={{ color: "#6A6D70" }}>Perhatian Diperlukan, Invoice Overdue</p>
+            </div>
+          </div>
+
+          <h4 className="font-bold mt-6 mb-3" style={{ color: "#003B62" }}>Default Widget per Role:</h4>
+          <table className="w-full text-sm border rounded-lg overflow-hidden">
+            <thead><tr style={{ background: "#003B62" }}><th className="px-3 py-2 text-left text-white text-xs">Role</th><th className="px-3 py-2 text-left text-white text-xs">Default Widgets</th></tr></thead>
+            <tbody>
+              <tr className="border-t"><td className="px-3 py-2 font-medium text-xs">Owner</td><td className="px-3 py-2 text-xs">Semua KPI + 4 Charts + JO List + Alerts + Branch Summary</td></tr>
+              <tr className="border-t" style={{ background: "#F5F6F7" }}><td className="px-3 py-2 font-medium text-xs">Branch Manager</td><td className="px-3 py-2 text-xs">4 KPI + Revenue Chart + Service Chart + JO + Alerts</td></tr>
+              <tr className="border-t"><td className="px-3 py-2 font-medium text-xs">Finance</td><td className="px-3 py-2 text-xs">Revenue, Profit, Outstanding AR + Profit Trend + Overdue Invoice</td></tr>
+              <tr className="border-t" style={{ background: "#F5F6F7" }}><td className="px-3 py-2 font-medium text-xs">Sales/CSO</td><td className="px-3 py-2 text-xs">JO Aktif, Customer + Top Customer Chart + JO List</td></tr>
+            </tbody>
+          </table>
+        </Section>
+
+        {/* Section 4 - Quotation */}
+        <Section id="quotation" title="4. Sales Quotation" color="#0070F2" pageBreak>
           <InfoBox color="#0070F2" title="Tujuan">
             Membuat penawaran harga resmi kepada pelanggan untuk jasa forwarding.
           </InfoBox>
@@ -128,8 +178,8 @@ export default function GuidePage() {
           ]} />
         </Section>
 
-        {/* Section 4 - Sales Order */}
-        <Section id="sales-order" title="4. Sales Order" color="#0070F2" pageBreak>
+        {/* Section 5 - Sales Order */}
+        <Section id="sales-order" title="5. Sales Order" color="#0070F2" pageBreak>
           <InfoBox color="#0070F2" title="Tujuan">
             Mengkonfirmasi order dari pelanggan berdasarkan quotation yang disetujui.
           </InfoBox>
@@ -143,8 +193,8 @@ export default function GuidePage() {
           ]} />
         </Section>
 
-        {/* Section 5 - Job Order */}
-        <Section id="job-order" title="5. Job Order" color="#0070F2" pageBreak>
+        {/* Section 6 - Job Order */}
+        <Section id="job-order" title="6. Job Order" color="#0070F2" pageBreak>
           <InfoBox color="#E9730C" title="Penting">
             Job Order adalah dokumen eksekusi operasional — digunakan oleh tim traffic/operations untuk menjalankan pengiriman.
           </InfoBox>
@@ -169,8 +219,8 @@ export default function GuidePage() {
           ]} />
         </Section>
 
-        {/* Section 6 - Customs */}
-        <Section id="customs" title="6. Custom Clearance" color="#E9730C" pageBreak>
+        {/* Section 7 - Customs */}
+        <Section id="customs" title="7. Custom Clearance" color="#E9730C" pageBreak>
           <h4 className="font-bold mb-3" style={{ color: "#003B62" }}>Import (PIB):</h4>
           <StepList steps={[
             "Buka JO → section Customs",
@@ -199,8 +249,8 @@ export default function GuidePage() {
           </div>
         </Section>
 
-        {/* Section 7 - Trucking */}
-        <Section id="trucking" title="7. Trucking" color="#E9730C" pageBreak>
+        {/* Section 8 - Trucking */}
+        <Section id="trucking" title="8. Trucking" color="#E9730C" pageBreak>
           <StepList steps={[
             "Buka JO → tab Trucking",
             "Klik \"Tambah Kendaraan\"",
@@ -212,8 +262,8 @@ export default function GuidePage() {
           ]} />
         </Section>
 
-        {/* Section 8 - Invoice AR */}
-        <Section id="invoice-ar" title="8. Invoice ke Customer (AR)" color="#107E3E" pageBreak>
+        {/* Section 9 - Invoice AR */}
+        <Section id="invoice-ar" title="9. Invoice ke Customer (AR)" color="#107E3E" pageBreak>
           <InfoBox color="#107E3E" title="Multi-Party Billing">
             Satu JO bisa menghasilkan beberapa invoice ke pihak berbeda (Consignee, Overseas Agent, Trading House).
           </InfoBox>
@@ -229,8 +279,8 @@ export default function GuidePage() {
           ]} />
         </Section>
 
-        {/* Section 9 - Invoice AP */}
-        <Section id="invoice-ap" title="9. Vendor Invoice (AP)" color="#BB0000" pageBreak>
+        {/* Section 10 - Invoice AP */}
+        <Section id="invoice-ap" title="10. Vendor Invoice (AP)" color="#BB0000" pageBreak>
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div className="p-4 rounded-lg border-l-4" style={{ background: "#F5F8FF", borderColor: "#0070F2" }}>
               <p className="text-sm font-bold" style={{ color: "#0070F2" }}>🏢 Vendor Eksternal</p>
@@ -252,8 +302,8 @@ export default function GuidePage() {
           ]} />
         </Section>
 
-        {/* Section 10 - Approval */}
-        <Section id="approval" title="10. Approval" color="#107E3E" pageBreak>
+        {/* Section 11 - Approval */}
+        <Section id="approval" title="11. Approval" color="#107E3E" pageBreak>
           <h4 className="font-bold mb-3" style={{ color: "#003B62" }}>Matrix Approval:</h4>
           <table className="w-full text-sm border rounded-lg overflow-hidden">
             <thead><tr style={{ background: "#003B62" }}><th className="px-4 py-2 text-left text-white">Nilai</th><th className="px-4 py-2 text-left text-white">Approver</th></tr></thead>
@@ -275,42 +325,109 @@ export default function GuidePage() {
           ]} />
         </Section>
 
-        {/* Section 11 - Chat */}
-        <Section id="chat" title="11. Chat & Komunikasi" color="#0070F2" pageBreak>
-          <StepList steps={[
-            "Klik icon 💬 di header",
-            "Pilih channel atau buat percakapan baru",
-            "Ketik pesan → Enter untuk kirim",
-            "Pesan di JO Thread otomatis tersimpan di Activity Log JO",
-          ]} />
-          <div className="mt-4 grid grid-cols-3 gap-3">
+        {/* Section 12 - Chat */}
+        <Section id="chat" title="12. Chat & Komunikasi" color="#0070F2" pageBreak>
+          <InfoBox color="#0070F2" title="Kolaborasi Terintegrasi">
+            Chat KayOcean terhubung langsung dengan data operasional. Percakapan di JO Thread otomatis tersimpan sebagai Activity Log pada Job Order terkait.
+          </InfoBox>
+
+          <h4 className="font-bold mt-6 mb-3" style={{ color: "#003B62" }}>Jenis Percakapan:</h4>
+          <div className="grid grid-cols-3 gap-3 mb-4">
             <div className="p-3 rounded-lg text-center" style={{ background: "#E8F0FE" }}>
-              <p className="text-sm font-bold" style={{ color: "#0070F2" }}># Channel</p>
-              <p className="text-[10px]" style={{ color: "#6A6D70" }}>Grup per divisi</p>
+              <p className="text-lg mb-1">👥</p>
+              <p className="text-xs font-bold" style={{ color: "#0070F2" }}>Channel</p>
+              <p className="text-[10px]" style={{ color: "#6A6D70" }}>Grup per divisi/topik. Contoh: # operasional, # keuangan</p>
             </div>
             <div className="p-3 rounded-lg text-center" style={{ background: "#E6F4EA" }}>
-              <p className="text-sm font-bold" style={{ color: "#107E3E" }}>💬 DM</p>
-              <p className="text-[10px]" style={{ color: "#6A6D70" }}>Pesan langsung</p>
+              <p className="text-lg mb-1">💬</p>
+              <p className="text-xs font-bold" style={{ color: "#107E3E" }}>Direct Message</p>
+              <p className="text-[10px]" style={{ color: "#6A6D70" }}>Pesan pribadi antar user. Real-time, terenkripsi</p>
             </div>
             <div className="p-3 rounded-lg text-center" style={{ background: "#FFF3E0" }}>
-              <p className="text-sm font-bold" style={{ color: "#E9730C" }}>🔗 JO Thread</p>
-              <p className="text-[10px]" style={{ color: "#6A6D70" }}>Linked ke JO</p>
+              <p className="text-lg mb-1">⚙️</p>
+              <p className="text-xs font-bold" style={{ color: "#E9730C" }}>JO Thread</p>
+              <p className="text-[10px]" style={{ color: "#6A6D70" }}>Linked ke Job Order. Pesan jadi audit trail</p>
             </div>
           </div>
-        </Section>
 
-        {/* Section 12 - Reports */}
-        <Section id="laporan" title="12. Laporan & Dashboard" color="#6B2FA0" pageBreak>
+          <h4 className="font-bold mt-4 mb-3" style={{ color: "#003B62" }}>Cara Menggunakan Chat:</h4>
           <StepList steps={[
-            "Dashboard — KPI ringkasan (revenue, profit, JO aktif)",
-            "Papan Control — monitoring real-time (Kanban / Timeline / Table)",
-            "Laporan Profitabilitas — filter per JO, customer, cabang, periode",
-            "Export CSV — download data untuk analisis",
+            "Klik menu \"Chat\" di sidebar atau icon 💬 di header",
+            "Di sidebar kiri: pilih channel, DM, atau JO Thread yang ingin dibuka",
+            "Ketik pesan di kotak input bawah → tekan Enter untuk kirim",
+            "Shift + Enter untuk baris baru (multi-line)",
+            "Klik icon 👥 di header chat untuk melihat anggota room",
+            "Klik \"+\" di sidebar untuk membuat channel baru",
+          ]} />
+
+          <h4 className="font-bold mt-6 mb-3" style={{ color: "#003B62" }}>Notifikasi Chat:</h4>
+          <StepList steps={[
+            "Badge merah di icon 💬 header menunjukkan jumlah room dengan pesan baru",
+            "Badge otomatis hilang setelah Anda membuka room tersebut",
+            "Notifikasi di-refresh otomatis setiap 10 detik",
+          ]} />
+
+          <RoleBox roles={[
+            { role: "Semua User", action: "Dapat mengirim & menerima pesan di channel yang diikuti" },
+            { role: "Owner/Manager", action: "Membuat channel baru, menambah anggota" },
           ]} />
         </Section>
 
-        {/* Section 13 - Roles */}
-        <Section id="peran" title="13. Peran & Hak Akses" color="#003B62" pageBreak>
+        {/* Section 13 - Reports */}
+        <Section id="laporan" title="13. Laporan & Grafik" color="#6B2FA0" pageBreak>
+          <InfoBox color="#6B2FA0" title="Analytics Terintegrasi">
+            Seluruh data operasional otomatis dihitung menjadi laporan real-time. Owner mendapat akses penuh ke semua grafik analytics.
+          </InfoBox>
+
+          <h4 className="font-bold mt-6 mb-3" style={{ color: "#003B62" }}>Fitur Laporan:</h4>
+          <div className="grid grid-cols-2 gap-3 mb-4">
+            <div className="p-3 rounded-lg border" style={{ borderColor: "#E5E7EB" }}>
+              <p className="text-xs font-bold" style={{ color: "#0070F2" }}>📊 Revenue & Cost Bulanan</p>
+              <p className="text-[10px] mt-1" style={{ color: "#6A6D70" }}>Bar chart perbandingan pendapatan vs biaya per bulan</p>
+            </div>
+            <div className="p-3 rounded-lg border" style={{ borderColor: "#E5E7EB" }}>
+              <p className="text-xs font-bold" style={{ color: "#107E3E" }}>📈 Trend Profit Margin</p>
+              <p className="text-[10px] mt-1" style={{ color: "#6A6D70" }}>Area chart pergerakan margin profit 6 bulan terakhir</p>
+            </div>
+            <div className="p-3 rounded-lg border" style={{ borderColor: "#E5E7EB" }}>
+              <p className="text-xs font-bold" style={{ color: "#E9730C" }}>🥧 Distribusi Layanan</p>
+              <p className="text-[10px] mt-1" style={{ color: "#6A6D70" }}>Pie chart proporsi Sea Import, Export, Air, Domestic</p>
+            </div>
+            <div className="p-3 rounded-lg border" style={{ borderColor: "#E5E7EB" }}>
+              <p className="text-xs font-bold" style={{ color: "#6B2FA0" }}>🏢 Perbandingan Cabang</p>
+              <p className="text-[10px] mt-1" style={{ color: "#6A6D70" }}>Horizontal bar chart revenue per cabang</p>
+            </div>
+            <div className="p-3 rounded-lg border" style={{ borderColor: "#E5E7EB" }}>
+              <p className="text-xs font-bold" style={{ color: "#BB0000" }}>👥 Top 5 Customer</p>
+              <p className="text-[10px] mt-1" style={{ color: "#6A6D70" }}>Progress bar customer dengan kontribusi revenue tertinggi</p>
+            </div>
+            <div className="p-3 rounded-lg border" style={{ borderColor: "#E5E7EB" }}>
+              <p className="text-xs font-bold" style={{ color: "#32363A" }}>🍩 Status Job Order</p>
+              <p className="text-[10px] mt-1" style={{ color: "#6A6D70" }}>Donut chart distribusi status (Completed, In Progress, dll)</p>
+            </div>
+          </div>
+
+          <h4 className="font-bold mt-4 mb-3" style={{ color: "#003B62" }}>Menu Laporan Profitabilitas:</h4>
+          <StepList steps={[
+            "Buka menu Keuangan → Laporan",
+            "Filter berdasarkan: Periode, Cabang, Jenis Layanan, Customer",
+            "Lihat ringkasan: Total Revenue, Cost, Profit, Margin rata-rata",
+            "Tabel detail per Job Order",
+            "Klik \"Export CSV\" untuk download data ke Excel",
+          ]} />
+
+          <h4 className="font-bold mt-6 mb-3" style={{ color: "#003B62" }}>Papan Control (Control Center):</h4>
+          <StepList steps={[
+            "Buka menu Papan Control dari sidebar",
+            "Pilih view: Kanban / Timeline / Table",
+            "Filter berdasarkan status, officer, customer, direction",
+            "Klik JO card untuk melihat detail di side panel",
+            "KPI strip di bagian atas menunjukkan ringkasan real-time",
+          ]} />
+        </Section>
+
+        {/* Section 14 - Roles */}
+        <Section id="peran" title="14. Peran & Hak Akses" color="#003B62" pageBreak>
           <table className="w-full text-sm border rounded-lg overflow-hidden">
             <thead><tr style={{ background: "#003B62" }}><th className="px-4 py-2 text-left text-white">Role</th><th className="px-4 py-2 text-left text-white">Akses</th></tr></thead>
             <tbody>

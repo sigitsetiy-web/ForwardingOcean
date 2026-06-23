@@ -96,15 +96,7 @@ export function Header() {
       {/* Right side */}
       <div className="flex items-center gap-3">
         {/* Chat */}
-        <a href="/chat" className="relative p-2 rounded-md hover:bg-gray-100">
-          <MessageCircle className="h-5 w-5" style={{ color: "#6A6D70" }} />
-          <Badge
-            variant="destructive"
-            className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
-          >
-            5
-          </Badge>
-        </a>
+        <ChatBadge userId={user?.id} />
 
         {/* Notifications */}
         <DropdownMenu>
@@ -208,5 +200,46 @@ export function Header() {
         </DropdownMenu>
       </div>
     </header>
+  );
+}
+
+// Chat badge with real unread count
+function ChatBadge({ userId }: { userId?: string }) {
+  const { data } = useQuery({
+    queryKey: ["chat-unread", userId],
+    queryFn: async () => {
+      if (!userId) return { unread: 0 };
+      const res = await fetch("/api/chat/rooms?userId=" + userId);
+      const rooms = await res.json();
+      // Count rooms with messages newer than user's lastReadAt
+      let unread = 0;
+      for (const room of rooms?.data || []) {
+        const member = room.members?.find((m: Record<string, unknown>) => m.userId === userId);
+        if (member && room.messages?.[0]) {
+          const lastRead = new Date(member.lastReadAt || 0);
+          const lastMsg = new Date(room.messages[0].createdAt);
+          if (lastMsg > lastRead) unread++;
+        }
+      }
+      return { unread };
+    },
+    enabled: !!userId,
+    refetchInterval: 10000,
+  });
+
+  const count = data?.unread ?? 0;
+
+  return (
+    <a href="/chat" className="relative p-2 rounded-md hover:bg-gray-100">
+      <MessageCircle className="h-5 w-5" style={{ color: "#6A6D70" }} />
+      {count > 0 && (
+        <Badge
+          variant="destructive"
+          className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
+        >
+          {count > 9 ? "9+" : count}
+        </Badge>
+      )}
+    </a>
   );
 }

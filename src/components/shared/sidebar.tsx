@@ -1,7 +1,5 @@
 "use client";
 
-"use client";
-
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useCurrentUser } from "@/hooks/use-current-user";
@@ -148,7 +146,7 @@ export function Sidebar() {
       {/* Hover zone — geser mouse ke kiri untuk buka menu */}
       {!isOpen && (
         <div
-          className="fixed left-0 top-0 z-40 h-full w-3 cursor-pointer"
+          className="absolute left-0 top-0 z-30 h-full w-3 cursor-pointer"
           onMouseEnter={() => {
             clearCloseTimer();
             open();
@@ -157,27 +155,19 @@ export function Sidebar() {
         />
       )}
 
-      {/* Backdrop saat sidebar terbuka (non-pinned) */}
-      {isOpen && !isPinned && (
-        <div
-          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-[1px]"
-          onClick={close}
-          aria-hidden
-        />
-      )}
-
       <aside
         className={cn(
-          "fixed left-0 top-0 z-50 flex h-screen w-64 flex-col shadow-xl transition-transform duration-300 ease-in-out",
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          "flex h-screen flex-shrink-0 flex-col overflow-hidden transition-[width] duration-300 ease-in-out",
+          isOpen ? "w-64 shadow-lg" : "w-0"
         )}
         style={{
           background: "#FFFFFF",
-          borderRight: "1px solid #D1D2D4",
+          borderRight: isOpen ? "1px solid #D1D2D4" : "none",
         }}
         onMouseEnter={clearCloseTimer}
         onMouseLeave={scheduleClose}
       >
+        <div className="flex h-full w-64 flex-col">
         {/* Logo */}
         <div
           className="flex h-14 items-center justify-between px-4"
@@ -322,6 +312,7 @@ export function Sidebar() {
             </div>
           </div>
         )}
+        </div>
       </aside>
     </>
   );

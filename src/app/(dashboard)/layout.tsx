@@ -4,15 +4,13 @@ import { Sidebar } from "@/components/shared/sidebar";
 import { Header } from "@/components/shared/header";
 import { WorkspaceTabBar } from "@/components/shared/workspace-tab-bar";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { SidebarProvider, useSidebar } from "@/hooks/use-sidebar";
+import { SidebarProvider } from "@/hooks/use-sidebar";
 import { WorkspaceTabsProvider } from "@/hooks/use-workspace-tabs";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { cn } from "@/lib/utils";
 
 function DashboardShell({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useCurrentUser();
-  const { isPinned } = useSidebar();
   const router = useRouter();
 
   useEffect(() => {
@@ -35,14 +33,9 @@ function DashboardShell({ children }: { children: React.ReactNode }) {
   if (!user) return null;
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="relative flex h-screen overflow-hidden">
       <Sidebar />
-      <div
-        className={cn(
-          "flex flex-1 flex-col overflow-hidden transition-[padding] duration-300",
-          isPinned && "pl-64"
-        )}
-      >
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden transition-all duration-300 ease-in-out">
         <Header />
         <WorkspaceTabBar />
         <main className="flex-1 overflow-y-auto p-6" style={{ background: "#F5F6F7" }}>

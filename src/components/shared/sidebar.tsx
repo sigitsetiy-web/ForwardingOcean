@@ -1,9 +1,13 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+"use client";
+
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { useSidebar } from "@/hooks/use-sidebar";
+import { useWorkspaceTabs } from "@/hooks/use-workspace-tabs";
+import { getNewHrefForMenu, WORKSPACE_MODULES } from "@/lib/workspace-modules";
 import { hasPermission } from "@/lib/rbac";
 import { Role } from "@prisma/client";
 import {
@@ -18,13 +22,16 @@ import {
   BarChart3,
   Building2,
   UserCog,
-  Settings,
-  ChevronLeft,
   Globe,
   ClipboardList,
   MessageCircle,
+  Pin,
+  PinOff,
+  X,
+  List,
+  Plus,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 
 interface MenuItem {
@@ -42,7 +49,6 @@ interface MenuGroup {
 function getGroupedMenu(role: Role): MenuGroup[] {
   const groups: MenuGroup[] = [];
 
-  // Main
   groups.push({
     title: "UTAMA",
     items: [
@@ -52,7 +58,6 @@ function getGroupedMenu(role: Role): MenuGroup[] {
     ],
   });
 
-  // Operations
   const opsItems: MenuItem[] = [];
   if (hasPermission(role, "read", "quotation"))
     opsItems.push({ label: "Quotation", href: "/quotations", icon: FileText });
@@ -68,7 +73,6 @@ function getGroupedMenu(role: Role): MenuGroup[] {
     groups.push({ title: "OPERASIONAL", items: opsItems });
   }
 
-  // CRM
   const crmItems: MenuItem[] = [];
   if (hasPermission(role, "read", "customer"))
     crmItems.push({ label: "Pelanggan", href: "/customers", icon: Users });
@@ -76,7 +80,6 @@ function getGroupedMenu(role: Role): MenuGroup[] {
     groups.push({ title: "CRM", items: crmItems });
   }
 
-  // Finance & Reports
   const finItems: MenuItem[] = [];
   if (hasPermission(role, "read", "invoice"))
     finItems.push({ label: "Keuangan", href: "/finance", icon: DollarSign });
@@ -88,7 +91,6 @@ function getGroupedMenu(role: Role): MenuGroup[] {
     groups.push({ title: "KEUANGAN", items: finItems });
   }
 
-  // Settings
   const settItems: MenuItem[] = [];
   if (hasPermission(role, "read", "branch"))
     settItems.push({ label: "Cabang", href: "/settings/branches", icon: Building2 });
@@ -104,126 +106,223 @@ function getGroupedMenu(role: Role): MenuGroup[] {
 }
 
 export function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   const { user } = useCurrentUser();
-
+  const { isOpen, isPinned, open, close, togglePin } = useSidebar();
+  const { openTab } = useWorkspaceTabs();
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const menuGroups = user ? getGroupedMenu(user.role) : [];
 
+  const clearCloseTimer = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+  };
+
+  const scheduleClose = () => {
+    if (isPinned) return;
+    clearCloseTimer();
+    closeTimerRef.current = setTimeout(() => close(), 350);
+  };
+
+  useEffect(() => () => clearCloseTimer(), []);
+
+  const handleNavClick = () => {
+    if (!isPinned) close();
+  };
+
+  const handleOpenModule = (href: string, view: "list" | "new" = "list") => {
+    const module = WORKSPACE_MODULES.find((m) => m.id === href);
+    if (module) {
+      openTab(module, view);
+    } else {
+      router.push(href);
+    }
+    handleNavClick();
+  };
+
   return (
-    <aside
-      className={cn(
-        "flex flex-col h-screen transition-all duration-300",
-        collapsed ? "w-16" : "w-64"
+    <>
+      {/* Hover zone — geser mouse ke kiri untuk buka menu */}
+      {!isOpen && (
+        <div
+          className="fixed left-0 top-0 z-40 h-full w-3 cursor-pointer"
+          onMouseEnter={() => {
+            clearCloseTimer();
+            open();
+          }}
+          aria-hidden
+        />
       )}
-      style={{
-        background: "#FFFFFF",
-        borderRight: "1px solid #D1D2D4",
-      }}
-    >
-      {/* Logo */}
-      <div
-        className="flex items-center justify-between h-14 px-4"
-        style={{ borderBottom: "1px solid #D1D2D4" }}
+
+      {/* Backdrop saat sidebar terbuka (non-pinned) */}
+      {isOpen && !isPinned && (
+        <div
+          className="fixed inset-0 z-40 bg-black/20 backdrop-blur-[1px]"
+          onClick={close}
+          aria-hidden
+        />
+      )}
+
+      <aside
+        className={cn(
+          "fixed left-0 top-0 z-50 flex h-screen w-64 flex-col shadow-xl transition-transform duration-300 ease-in-out",
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+        style={{
+          background: "#FFFFFF",
+          borderRight: "1px solid #D1D2D4",
+        }}
+        onMouseEnter={clearCloseTimer}
+        onMouseLeave={scheduleClose}
       >
-        {!collapsed && (
-          <div className="flex items-center gap-2.5">
-            <img src="/images/logo-keyocean.svg" alt="KayOcean" className="h-8 w-auto" />
-            <div>
+        {/* Logo */}
+        <div
+          className="flex h-14 items-center justify-between px-4"
+          style={{ borderBottom: "1px solid #D1D2D4" }}
+        >
+          <div className="flex items-center gap-2.5 min-w-0">
+            <img src="/images/logo-keyocean.svg" alt="KayOcean" className="h-8 w-auto flex-shrink-0" />
+            <div className="min-w-0">
               <span className="font-bold text-[14px]" style={{ color: "#2B4C9B" }}>KayOcean</span>
-              <p className="text-[10px] leading-tight" style={{ color: "#6A6D70" }}>Forwarding System</p>
+              <p className="text-[10px] leading-tight truncate" style={{ color: "#6A6D70" }}>Forwarding System</p>
             </div>
           </div>
-        )}
-        {collapsed && (
-          <img src="/images/logo-keyocean.svg" alt="KayOcean" className="h-7 w-auto mx-auto" />
-        )}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-7 w-7"
-          onClick={() => setCollapsed(!collapsed)}
-          style={{ color: "#6A6D70" }}
-        >
-          <ChevronLeft
-            className={cn(
-              "h-4 w-4 transition-transform",
-              collapsed && "rotate-180"
+          <div className="flex items-center gap-0.5 flex-shrink-0">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-7 w-7"
+              onClick={togglePin}
+              title={isPinned ? "Lepas pin sidebar" : "Pin sidebar tetap terbuka"}
+              style={{ color: isPinned ? "#0070F2" : "#6A6D70" }}
+            >
+              {isPinned ? <PinOff className="h-4 w-4" /> : <Pin className="h-4 w-4" />}
+            </Button>
+            {!isPinned && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7"
+                onClick={close}
+                title="Tutup menu"
+                style={{ color: "#6A6D70" }}
+              >
+                <X className="h-4 w-4" />
+              </Button>
             )}
-          />
-        </Button>
-      </div>
+          </div>
+        </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto py-3">
-        {menuGroups.map((group) => (
-          <div key={group.title} className="mb-4">
-            {/* Group Title */}
-            {!collapsed && (
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto py-3">
+          {menuGroups.map((group) => (
+            <div key={group.title} className="mb-4">
               <p
                 className="px-4 mb-1 text-[10px] font-semibold tracking-wider uppercase"
                 style={{ color: "#6A6D70" }}
               >
                 {group.title}
               </p>
-            )}
-            {collapsed && <div className="h-px mx-3 my-2" style={{ background: "#D1D2D4" }} />}
+              <ul className="space-y-0.5 px-2">
+                {group.items.map((item) => {
+                  const Icon = item.icon;
+                  const newHref = getNewHrefForMenu(item.href);
+                  const isActive =
+                    pathname === item.href ||
+                    (item.href !== "/dashboard" && pathname.startsWith(item.href));
 
-            {/* Items */}
-            <ul className="space-y-0.5 px-2">
-              {group.items.map((item) => {
-                const Icon = item.icon;
-                const isActive =
-                  pathname === item.href ||
-                  (item.href !== "/dashboard" && pathname.startsWith(item.href));
+                  return (
+                    <li key={item.href}>
+                      <button
+                        type="button"
+                        onClick={() => handleOpenModule(item.href, "list")}
+                        className={cn(
+                          "w-full flex items-center gap-3 px-3 py-2 rounded-md text-[13px] font-medium transition-all duration-150",
+                          isActive ? "text-white" : "hover:bg-[#F5F6F7]"
+                        )}
+                        style={
+                          isActive
+                            ? { background: "#0070F2", color: "#FFFFFF" }
+                            : { color: "#32363A" }
+                        }
+                      >
+                        <Icon
+                          className={cn(
+                            "h-[18px] w-[18px] flex-shrink-0",
+                            isActive ? "text-white" : "text-[#6A6D70]"
+                          )}
+                        />
+                        <span className="text-left">{item.label}</span>
+                      </button>
 
-                return (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        "flex items-center gap-3 px-3 py-2 rounded-md text-[13px] font-medium transition-all duration-150",
-                        isActive
-                          ? "text-white"
-                          : "hover:bg-[#F5F6F7]"
+                      {newHref && (
+                        <div className="ml-9 mt-0.5 mb-1 flex gap-1">
+                          <button
+                            type="button"
+                            onClick={() => handleOpenModule(item.href, "list")}
+                            className={cn(
+                              "inline-flex items-center gap-1 rounded px-2 py-1 text-[10px] font-medium transition-colors",
+                              isActive && pathname !== newHref
+                                ? "bg-[#E8F4FD] text-[#0070F2]"
+                                : "text-[#6A6D70] hover:bg-[#F5F6F7]"
+                            )}
+                          >
+                            <List className="h-3 w-3" />
+                            Daftar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleOpenModule(item.href, "new")}
+                            className={cn(
+                              "inline-flex items-center gap-1 rounded px-2 py-1 text-[10px] font-medium transition-colors",
+                              pathname === newHref || pathname.startsWith(`${newHref}/`)
+                                ? "bg-[#E8F4FD] text-[#0070F2]"
+                                : "text-[#6A6D70] hover:bg-[#F5F6F7]"
+                            )}
+                          >
+                            <Plus className="h-3 w-3" />
+                            Baru
+                          </button>
+                        </div>
                       )}
-                      style={
-                        isActive
-                          ? { background: "#0070F2", color: "#FFFFFF" }
-                          : { color: "#32363A" }
-                      }
-                      title={collapsed ? item.label : undefined}
-                    >
-                      <Icon className={cn("h-[18px] w-[18px] flex-shrink-0", isActive ? "text-white" : "text-[#6A6D70]")} />
-                      {!collapsed && <span>{item.label}</span>}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        ))}
-      </nav>
-
-      {/* User Info */}
-      {user && !collapsed && (
-        <div className="p-4" style={{ borderTop: "1px solid #D1D2D4" }}>
-          <div className="flex items-center gap-3">
-            <div
-              className="h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold text-white"
-              style={{ background: "#0070F2" }}
-            >
-              {user.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase()}
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-[13px] font-medium truncate" style={{ color: "#32363A" }}>{user.name}</div>
-              <div className="text-[11px] truncate" style={{ color: "#6A6D70" }}>
-                {user.role.replace("_", " ")}
+          ))}
+        </nav>
+
+        {/* User Info */}
+        {user && (
+          <div className="p-4" style={{ borderTop: "1px solid #D1D2D4" }}>
+            <div className="flex items-center gap-3">
+              <div
+                className="h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
+                style={{ background: "#0070F2" }}
+              >
+                {user.name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")
+                  .slice(0, 2)
+                  .toUpperCase()}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-[13px] font-medium truncate" style={{ color: "#32363A" }}>
+                  {user.name}
+                </div>
+                <div className="text-[11px] truncate" style={{ color: "#6A6D70" }}>
+                  {user.role.replace("_", " ")}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
-    </aside>
+        )}
+      </aside>
+    </>
   );
 }

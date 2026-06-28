@@ -2,16 +2,17 @@
 
 import { Sidebar } from "@/components/shared/sidebar";
 import { Header } from "@/components/shared/header";
+import { WorkspaceTabBar } from "@/components/shared/workspace-tab-bar";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { SidebarProvider, useSidebar } from "@/hooks/use-sidebar";
+import { WorkspaceTabsProvider } from "@/hooks/use-workspace-tabs";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { cn } from "@/lib/utils";
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function DashboardShell({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useCurrentUser();
+  const { isPinned } = useSidebar();
   const router = useRouter();
 
   useEffect(() => {
@@ -36,12 +37,32 @@ export default function DashboardLayout({
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div
+        className={cn(
+          "flex flex-1 flex-col overflow-hidden transition-[padding] duration-300",
+          isPinned && "pl-64"
+        )}
+      >
         <Header />
+        <WorkspaceTabBar />
         <main className="flex-1 overflow-y-auto p-6" style={{ background: "#F5F6F7" }}>
           {children}
         </main>
       </div>
     </div>
+  );
+}
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <SidebarProvider>
+      <WorkspaceTabsProvider>
+        <DashboardShell>{children}</DashboardShell>
+      </WorkspaceTabsProvider>
+    </SidebarProvider>
   );
 }

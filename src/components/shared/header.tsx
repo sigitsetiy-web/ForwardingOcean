@@ -1,6 +1,7 @@
 "use client";
 
-import { Bell, LogOut, User, Check, MessageCircle } from "lucide-react";
+import { Bell, LogOut, User, Check, MessageCircle, PanelLeft } from "lucide-react";
+import { useSidebar } from "@/hooks/use-sidebar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -17,6 +18,7 @@ import { Breadcrumb } from "./breadcrumb";
 
 export function Header() {
   const { user } = useCurrentUser();
+  const { toggle } = useSidebar();
   const queryClient = useQueryClient();
 
   const initials = user?.name
@@ -83,8 +85,17 @@ export function Header() {
 
   return (
     <header className="h-14 border-b bg-white flex items-center justify-between px-6" style={{ borderColor: "#D1D2D4" }}>
-      {/* Left - Breadcrumb */}
-      <div className="flex items-center gap-3">
+      {/* Left - Menu toggle & Breadcrumb */}
+      <div className="flex items-center gap-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 flex-shrink-0"
+          onClick={toggle}
+          title="Buka/tutup menu"
+        >
+          <PanelLeft className="h-5 w-5" style={{ color: "#6A6D70" }} />
+        </Button>
         <Breadcrumb />
       </div>
 

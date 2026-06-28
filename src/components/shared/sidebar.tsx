@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useSidebar } from "@/hooks/use-sidebar";
 import { useWorkspaceTabs } from "@/hooks/use-workspace-tabs";
-import { getNewHrefForMenu, WORKSPACE_MODULES } from "@/lib/workspace-modules";
+import { WORKSPACE_MODULES } from "@/lib/workspace-modules";
 import { hasPermission } from "@/lib/rbac";
 import { Role } from "@prisma/client";
 import {
@@ -26,8 +26,6 @@ import {
   Pin,
   PinOff,
   X,
-  List,
-  Plus,
 } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -219,7 +217,6 @@ export function Sidebar() {
               <ul className="space-y-0.5 px-2">
                 {group.items.map((item) => {
                   const Icon = item.icon;
-                  const newHref = getNewHrefForMenu(item.href);
                   const isActive =
                     pathname === item.href ||
                     (item.href !== "/dashboard" && pathname.startsWith(item.href));
@@ -247,37 +244,6 @@ export function Sidebar() {
                         />
                         <span className="text-left">{item.label}</span>
                       </button>
-
-                      {newHref && (
-                        <div className="ml-9 mt-0.5 mb-1 flex gap-1">
-                          <button
-                            type="button"
-                            onClick={() => handleOpenModule(item.href, "list")}
-                            className={cn(
-                              "inline-flex items-center gap-1 rounded px-2 py-1 text-[10px] font-medium transition-colors",
-                              isActive && pathname !== newHref
-                                ? "bg-[#E8F4FD] text-[#0070F2]"
-                                : "text-[#6A6D70] hover:bg-[#F5F6F7]"
-                            )}
-                          >
-                            <List className="h-3 w-3" />
-                            Daftar
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => handleOpenModule(item.href, "new")}
-                            className={cn(
-                              "inline-flex items-center gap-1 rounded px-2 py-1 text-[10px] font-medium transition-colors",
-                              pathname === newHref || pathname.startsWith(`${newHref}/`)
-                                ? "bg-[#E8F4FD] text-[#0070F2]"
-                                : "text-[#6A6D70] hover:bg-[#F5F6F7]"
-                            )}
-                          >
-                            <Plus className="h-3 w-3" />
-                            Baru
-                          </button>
-                        </div>
-                      )}
                     </li>
                   );
                 })}

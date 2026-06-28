@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-APP_DIR=/var/www/restpos
+APP_DIR=/opt/ForwardingOcean
 TMP=/tmp/fms-deploy-$$
 REPO=https://github.com/sigitsetiy-web/ForwardingOcean.git
 
@@ -35,7 +35,8 @@ echo "==> Build..."
 npm run build
 
 echo "==> Restart PM2..."
-pm2 restart restpos
+chmod +x "$APP_DIR"/start.sh 2>/dev/null || true
+pm2 restart keyocean
 pm2 save
 
 echo "==> Deploy selesai."
